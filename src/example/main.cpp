@@ -29,7 +29,7 @@ int main()
 {
   std::cout << "Rend Test" << std::endl;
 
-  SDL_Window* window = SDL_CreateWindow("VRSA",
+  SDL_Window* window = SDL_CreateWindow("Rend Test",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     800, 600,
     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -51,6 +51,11 @@ int main()
 
   shader->setSource(src);
 
+  std::sr1::shared_ptr<Buffer> shape = context->createBuffer();
+  shape->add(vec2(0, 0.5f));
+  shape->add(vec2(-0.5f, -0.5f));
+  shape->add(vec2(0.5f, -0.5f));
+
   bool running = true;
   SDL_Event e = {0};
 
@@ -64,10 +69,11 @@ int main()
       }
     }
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //shader->render();
+    shader->setAttribute("a_Position", shape);
+    shader->render();
 
     SDL_GL_SwapWindow(window);
   }
