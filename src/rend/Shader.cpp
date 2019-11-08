@@ -123,6 +123,7 @@ void Shader::render()
       if((*it)->type == GL_FLOAT) size = 1;
       else if((*it)->type == GL_FLOAT_VEC2) size = 2;
       else if((*it)->type == GL_FLOAT_VEC3) size = 3;
+      else if((*it)->type == GL_FLOAT_VEC4) size = 4;
       else throw Exception("Invalid buffer type");
 
       glBindBuffer(GL_ARRAY_BUFFER, (*it)->bufferVal->getId()); pollForError();
@@ -142,6 +143,11 @@ void Shader::render()
         throw Exception("The specified attribute streams are of different sizes");
       }
     }
+  }
+
+  if(vertices == -1)
+  {
+    throw Exception("No vertices were submitted for drawing");
   }
 
   glDrawArrays(GL_TRIANGLES, 0, vertices); pollForError();

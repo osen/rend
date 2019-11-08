@@ -21,7 +21,12 @@ else()
   target_link_libraries(rend GLEW GL)
 endif()
 
-add_executable(example
-  src/example/main.cpp
+add_executable(triangle
+  src/triangle/main.cpp
 )
-target_link_libraries(example rend SDL2)
+target_link_libraries(triangle rend SDL2)
+
+add_executable(mesh
+  src/mesh/main.cpp
+)
+target_link_libraries(mesh rend SDL2)

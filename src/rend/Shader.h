@@ -17,6 +17,7 @@ struct VariableInfo;
 struct Buffer;
 struct RenderTexture;
 struct TextureAdapter;
+struct Mesh;
 
 struct Shader : public std::sr1::noncopyable
 {
@@ -35,6 +36,7 @@ struct Shader : public std::sr1::noncopyable
   void setUniform(const std::string& variable, vec4 value);
   void setAttribute(const std::string& variable, const std::sr1::shared_ptr<Buffer>& value);
   void setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value);
+  void setMesh(const std::sr1::shared_ptr<Mesh>& value);
 
 private:
   friend struct Context;

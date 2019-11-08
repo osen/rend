@@ -8,5 +8,6 @@
 #include "Buffer.h"
 #include "Exception.h"
 #include "mathutil.h"
+#include "Mesh.h"
 
 #endif

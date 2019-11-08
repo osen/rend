@@ -20,6 +20,7 @@ struct Buffer : public std::sr1::noncopyable
   void add(float value);
   void add(vec2 value);
   void add(vec3 value);
+  void add(vec4 value);
 
   GLuint getId();
   int getSize();

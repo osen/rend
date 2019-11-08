@@ -47,8 +47,8 @@ int main()
   }
 
   std::sr1::shared_ptr<Context> context = Context::initialize();
-  std::sr1::shared_ptr<Shader> shader = context->createShader();
 
+  std::sr1::shared_ptr<Shader> shader = context->createShader();
   shader->setSource(src);
 
   std::sr1::shared_ptr<Buffer> shape = context->createBuffer();
@@ -78,9 +78,12 @@ int main()
     SDL_GL_SwapWindow(window);
   }
 
+  // These should be called after rend::Context is out of scope
+/*
   SDL_GL_DeleteContext(glContext);
   SDL_DestroyWindow(window);
   SDL_Quit();
+*/
 
   return 0;
 }
