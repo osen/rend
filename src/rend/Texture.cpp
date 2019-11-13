@@ -69,16 +69,15 @@ void Texture::setSize(unsigned int width, unsigned int height)
 
 void Texture::setPixel(unsigned int x, unsigned int y, vec3 rgb)
 {
-  dirty = true;
+  setPixel(x, y, vec4(rgb, 1));
   bpp = 3;
-  data.at(size.x * y + x) = vec4(rgb, 1);
 }
 
 void Texture::setPixel(unsigned int x, unsigned int y, vec4 rgba)
 {
   dirty = true;
   bpp = 4;
-  data.at(size.x * y + x) = rgba;
+  data.at(size.x * (size.y - 1 - y) + x) = rgba;
 }
 
 vec4 Texture::getPixel(unsigned int x, unsigned int y) const

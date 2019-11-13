@@ -42,3 +42,8 @@ add_executable(rotate
   src/rotate/main.cpp
 )
 target_link_libraries(rotate rend SDL2)
+
+add_executable(texture
+  src/texture/main.cpp
+)
+target_link_libraries(texture rend SDL2)
