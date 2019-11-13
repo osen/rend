@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "RenderTexture.h"
 #include "TextureAdapter.h"
+#include "Mesh.h"
 
 #include <sr1/vector>
 
@@ -79,6 +80,9 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 
 void Shader::render()
 {
+  glEnable(GL_BLEND); pollForError();
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); pollForError();
+
   glUseProgram(id); pollForError();
 
   int activeTexture = 0;
@@ -153,6 +157,8 @@ void Shader::render()
   glDrawArrays(GL_TRIANGLES, 0, vertices); pollForError();
 
   glUseProgram(0); pollForError();
+
+  glDisable(GL_BLEND); pollForError();
 }
 
 void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
@@ -195,6 +201,15 @@ void Shader::setAttribute(const std::string& variable, const std::sr1::shared_pt
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, value->type, true);
   vi->bufferVal = value;
+}
+
+void Shader::setMesh(const std::sr1::shared_ptr<Mesh>& value)
+{
+  for(std::sr1::vector<std::sr1::shared_ptr<BufferData> >::iterator it =
+    value->buffers.begin(); it != value->buffers.end(); it++)
+  {
+    setAttribute((*it)->name, (*it)->buffer);
+  }
 }
 
 std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)

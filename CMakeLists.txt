@@ -14,6 +14,7 @@ add_library(rend
   src/rend/RenderTexture.cpp
   src/rend/Shader.cpp
   src/rend/Buffer.cpp
+  src/rend/Mesh.cpp
 )
 if(MSVC)
   target_link_libraries(rend glew32 opengl32)

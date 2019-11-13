@@ -9,27 +9,33 @@ using namespace rend;
 const char* src =
 "\n#ifdef VERTEX\n" \
 "attribute vec2 a_Position;" \
+"attribute vec4 a_Color;" \
+"" \
+"varying vec4 v_Color;" \
 "" \
 "void main()" \
 "{" \
 "  gl_Position = vec4(a_Position, 0, 1);" \
+"  v_Color = a_Color;" \
 "}" \
 "" \
 "\n#endif\n" \
 "\n#ifdef FRAGMENT\n" \
 "" \
+"varying vec4 v_Color;" \
+"" \
 "void main()" \
 "{" \
-"  gl_FragColor = vec4(1, 0, 0, 1);" \
+"  gl_FragColor = v_Color;" \
 "}" \
 "" \
 "\n#endif\n";
 
 int main()
 {
-  std::cout << "Rend Model Test" << std::endl;
+  std::cout << "Rend Mesh Test" << std::endl;
 
-  SDL_Window* window = SDL_CreateWindow("Rend Model Test",
+  SDL_Window* window = SDL_CreateWindow("Rend Mesh Test",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     800, 600,
     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -56,13 +62,13 @@ int main()
   buffer->add(vec2(0, 0.5f));
   buffer->add(vec2(-0.5f, -0.5f));
   buffer->add(vec2(0.5f, -0.5f));
-  //shape->setBuffer("a_Position", buffer);
+  shape->setBuffer("a_Position", buffer);
 
   buffer = context->createBuffer();
   buffer->add(vec4(1, 0, 0, 1));
   buffer->add(vec4(0, 1, 0, 1));
   buffer->add(vec4(1, 0, 0, 0.5f));
-  //shape->setBuffer("a_Color", buffer);
+  shape->setBuffer("a_Color", buffer);
 
   bool running = true;
   SDL_Event e = {0};
@@ -80,7 +86,7 @@ int main()
     glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //shader->setMesh(shape);
+    shader->setMesh(shape);
     shader->render();
 
     SDL_GL_SwapWindow(window);
