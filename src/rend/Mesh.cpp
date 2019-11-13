@@ -116,6 +116,14 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
 
       tcs.push_back(tc);
     }
+    else if(tokens.at(0) == "vn")
+    {
+      vec3 n(atof(tokens.at(1).c_str()),
+        atof(tokens.at(2).c_str()),
+        atof(tokens.at(3).c_str()));
+
+      normals.push_back(n);
+    }
     else if(tokens.at(0) == "f")
     {
       if(tokens.size() < 4) continue;
