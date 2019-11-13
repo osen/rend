@@ -15,6 +15,7 @@ add_library(rend
   src/rend/Shader.cpp
   src/rend/Buffer.cpp
   src/rend/Mesh.cpp
+  src/rend/Util.cpp
 )
 if(MSVC)
   target_link_libraries(rend glew32 opengl32)
@@ -31,3 +32,8 @@ add_executable(mesh
   src/mesh/main.cpp
 )
 target_link_libraries(mesh rend SDL2)
+
+add_executable(model
+  src/model/main.cpp
+)
+target_link_libraries(model rend SDL2)

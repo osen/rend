@@ -80,6 +80,7 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 
 void Shader::render()
 {
+  glEnable(GL_CULL_FACE); pollForError();
   glEnable(GL_BLEND); pollForError();
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); pollForError();
 
@@ -159,6 +160,7 @@ void Shader::render()
   glUseProgram(0); pollForError();
 
   glDisable(GL_BLEND); pollForError();
+  glDisable(GL_CULL_FACE); pollForError();
 }
 
 void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
