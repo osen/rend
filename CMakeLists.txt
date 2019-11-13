@@ -47,3 +47,8 @@ add_executable(texture
   src/texture/main.cpp
 )
 target_link_libraries(texture rend SDL2)
+
+add_executable(level
+  src/level/main.cpp
+)
+target_link_libraries(level rend SDL2)

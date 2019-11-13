@@ -43,7 +43,7 @@ const char* src =
 "void main()                                   \n" \
 "{                                             \n" \
 "  gl_FragColor = texture2D(u_Texture, v_TexCoord);      \n" \
-"  if(gl_FragColor.x == 9) gl_FragColor.x = v_Normal.x;   \n" \
+"  if(gl_FragColor.x == 9) gl_FragColor.x = v_Normal.x;  \n" \
 "}                                             \n" \
 "                                              \n" \
 "#endif                                        \n";
