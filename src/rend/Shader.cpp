@@ -210,6 +210,12 @@ void Shader::setMesh(const std::sr1::shared_ptr<Mesh>& value)
   {
     setAttribute((*it)->name, (*it)->buffer);
   }
+
+  for(std::sr1::vector<std::sr1::shared_ptr<TextureData> >::iterator it =
+    value->textures.begin(); it != value->textures.end(); it++)
+  {
+    setSampler((*it)->name, (*it)->texture);
+  }
 }
 
 std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)
