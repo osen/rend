@@ -49,7 +49,7 @@ int main()
   std::sr1::shared_ptr<Context> context = Context::initialize();
 
   std::sr1::shared_ptr<Shader> shader = context->createShader();
-  shader->setSource(src);
+  shader->parse(src);
 
   std::sr1::shared_ptr<Buffer> shape = context->createBuffer();
   shape->add(vec2(0, 0.5f));

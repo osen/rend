@@ -7,46 +7,47 @@
 using namespace rend;
 
 const char* src =
-"\n#ifdef VERTEX\n" \
-"attribute vec3 a_Position;" \
-"attribute vec2 a_TexCoord;" \
-""\
-"uniform mat4 u_Projection;" \
-"" \
-"varying vec2 v_TexCoord;" \
-"" \
-"void main()" \
-"{" \
-"  gl_Position = u_Projection * vec4(a_Position + vec3(0, 0, -5), 1);" \
-"  v_TexCoord = a_TexCoord;" \
-"}" \
-"" \
-"\n#endif\n" \
-"\n#ifdef FRAGMENT\n" \
-"" \
-"varying vec2 v_TexCoord;" \
-"" \
-"void main()" \
-"{" \
-"  gl_FragColor = vec4(v_TexCoord, 0, 1);" \
-"}" \
-"" \
-"\n#endif\n";
+"#ifdef VERTEX                                 \n" \
+"                                              \n" \
+"attribute vec3 a_Position;                    \n" \
+"attribute vec2 a_TexCoord;                    \n" \
+"                                              \n" \
+"uniform mat4 u_Projection;                    \n" \
+"                                              \n" \
+"varying vec2 v_TexCoord;                      \n" \
+"                                              \n" \
+"void main()                                   \n" \
+"{                                             \n" \
+"  vec3 pos = a_Position + vec3(0, 0, -5);     \n" \
+"  gl_Position = u_Projection * vec4(pos, 1);  \n" \
+"  v_TexCoord = a_TexCoord;                    \n" \
+"}                                             \n" \
+"                                              \n" \
+"#endif                                        \n" \
+"#ifdef FRAGMENT                               \n" \
+"                                              \n" \
+"varying vec2 v_TexCoord;                      \n" \
+"                                              \n" \
+"void main()                                   \n" \
+"{                                             \n" \
+"  gl_FragColor = vec4(v_TexCoord, 0, 1);      \n" \
+"}                                             \n" \
+"                                              \n" \
+"#endif                                        \n";
 
 const char* obj =
-"\n\n" \
-"\nv -1 1 0\n" \
-"\nv -1 -1 0\n" \
-"\nv 1 -1 0\n" \
-"\nv 1 1 0\n" \
-"\n\n" \
-"\nvt 0 1\n" \
-"\nvt 0 0\n" \
-"\nvt 1 0\n" \
-"\nvt 1 1\n" \
-"\n\n" \
-"\nf 1/1 2/2 3/3 4/4\n" \
-"\n\n";
+"v -1 1 0           \n" \
+"v -1 -1 0          \n" \
+"v 1 -1 0           \n" \
+"v 1 1 0            \n" \
+"                   \n" \
+"vt 0 1             \n" \
+"vt 0 0             \n" \
+"vt 1 0             \n" \
+"vt 1 1             \n" \
+"                   \n" \
+"f 1/1 2/2 3/3 4/4  \n" \
+"                   \n";
 
 int main()
 {
@@ -71,24 +72,10 @@ int main()
 
   std::sr1::shared_ptr<Context> context = Context::initialize();
   std::sr1::shared_ptr<Shader> shader = context->createShader();
-  shader->setSource(src);
+  shader->parse(src);
 
   std::sr1::shared_ptr<Mesh> shape = context->createMesh();
   shape->parse(obj);
-
-/*
-  std::sr1::shared_ptr<Buffer> buffer = context->createBuffer();
-  buffer->add(vec2(0, 1));
-  buffer->add(vec2(-1, -1));
-  buffer->add(vec2(1, -1));
-  shape->setBuffer("a_Position", buffer);
-
-  buffer = context->createBuffer();
-  buffer->add(vec4(1, 0, 0, 1));
-  buffer->add(vec4(0, 1, 0, 1));
-  buffer->add(vec4(1, 0, 0, 0.5f));
-  shape->setBuffer("a_Color", buffer);
-*/
 
   bool running = true;
   SDL_Event e = {0};

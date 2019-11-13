@@ -292,6 +292,11 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
 
 void Shader::setSource(const std::string& source)
 {
+  parse(source);
+}
+
+void Shader::parse(const std::string& source)
+{
   GLuint vertId = 0;
   GLuint fragId = 0;
   int success = 0;
