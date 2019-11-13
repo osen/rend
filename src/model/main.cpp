@@ -93,7 +93,7 @@ int main()
     glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader->setUniform("u_Projection", perspective(45.0f, 1.0f, 0.1f, 100.0f));
+    shader->setUniform("u_Projection", perspective(radians(45.0f), 1.0f, 0.1f, 100.0f));
     shader->setMesh(shape);
     shader->render();
 
