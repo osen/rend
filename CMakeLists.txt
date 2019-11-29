@@ -52,3 +52,9 @@ add_executable(level
   src/level/main.cpp
 )
 target_link_libraries(level rend SDL2)
+
+add_executable(collision
+  src/collision/main.cpp
+  src/collision/tritri.cpp
+)
+target_link_libraries(collision rend SDL2)
