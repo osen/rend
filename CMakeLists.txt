@@ -23,6 +23,23 @@ else()
   target_link_libraries(rend GLEW GL)
 endif()
 
+add_library(re
+  src/re/Context.c
+  src/re/Renderer.c
+  src/re/mathutil.c
+  src/re/Buffer.c
+)
+if(MSVC)
+  target_link_libraries(re glew32 opengl32)
+else()
+  target_link_libraries(re GLEW GL)
+endif()
+
+add_executable(tri
+  src/tri/main.c
+)
+target_link_libraries(tri re SDL2)
+
 add_executable(triangle
   src/triangle/main.cpp
 )
