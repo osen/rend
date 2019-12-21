@@ -37,6 +37,15 @@ ref(ReBuffer) ReContextCreateBuffer(ref(ReContext) ctx)
   ref(ReBuffer) rtn = NULL;
 
   rtn = allocate(ReBuffer);
+  _(rtn).data = vector_new(float);
+
+  glGenBuffers(1, &_(rtn).id);
+  _RePollForError();
+
+  if(_(rtn).id == 0)
+  {
+    panic("Failed to generate buffer");
+  }
 
   return rtn;
 }

@@ -31,9 +31,11 @@ int main()
   renderer = ReContextCreateRenderer(context);
 
   buffer = ReContextCreateBuffer(context);
-  //ReBufferAddVec2(ReVec2Xy(0, 0.5f));
-  //ReBufferAddVec2(ReVec2Xy(-0.5f, -0.5f));
-  //ReBufferAddVec2(ReVec2Xy(0.5f, -0.5f));
+  ReBufferAddVec2(buffer, ReVec2Xy(0, 0.5f));
+  ReBufferAddVec2(buffer, ReVec2Xy(-0.5f, -0.5f));
+  ReBufferAddVec2(buffer, ReVec2Xy(0.5f, -0.5f));
+
+  ReRendererSetPositionBuffer(renderer, buffer);
 
   int running = 1;
   SDL_Event e = {0};
@@ -50,8 +52,7 @@ int main()
 
     ReRendererClear(renderer, ReVec4Rgba(0.39f, 0.58f, 0.93f, 1.0f));
 
-    //RendererSetBuffer(renderer, "a_Position", buffer);
-    //RendererRender(renderer);
+    ReRendererRender(renderer);
 
     SDL_GL_SwapWindow(window);
   }

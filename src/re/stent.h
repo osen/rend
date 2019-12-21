@@ -1066,6 +1066,8 @@ void ifstream_getline(ref(ifstream) ctx, ref(sstream) out)
 void panic(char *message)
 {
   printf("Panic: %s\n", message);
+
+  abort();
 }
 
 #endif

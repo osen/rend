@@ -1,5 +1,15 @@
 #include "mathutil.h"
 
+struct ReVec2 ReVec2Xy(float x, float y)
+{
+  struct ReVec2 rtn = {0};
+
+  rtn.x = x;
+  rtn.y = y;
+
+  return rtn;
+}
+
 struct ReVec4 ReVec4Xyzw(float x, float y, float z, float w)
 {
   struct ReVec4 rtn = {0};

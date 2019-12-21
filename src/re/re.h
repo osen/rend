@@ -6,4 +6,6 @@
 #include "mathutil.h"
 #include "Buffer.h"
 
+typedef struct ReVec2 ReVec2;
+
 #endif

@@ -1,5 +1,8 @@
 #include "stent.h"
 
 struct ReBuffer;
+struct ReVec2;
 
+size_t ReBufferSize(ref(ReBuffer) ctx);
 void ReBufferDestroy(ref(ReBuffer) ctx);
+void ReBufferAddVec2(ref(ReBuffer) ctx, struct ReVec2 val);
