@@ -7,6 +7,7 @@
 #include "Buffer.h"
 
 typedef struct ReVec2 ReVec2;
+typedef struct ReVec3 ReVec3;
 typedef struct ReVec4 ReVec4;
 typedef struct ReMat4 ReMat4;
 

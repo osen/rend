@@ -34,7 +34,7 @@ add_library(re
 if(MSVC)
   target_link_libraries(re glew32 opengl32)
 else()
-  target_link_libraries(re GLEW GL)
+  target_link_libraries(re GLEW GL m)
 endif()
 
 add_executable(tri

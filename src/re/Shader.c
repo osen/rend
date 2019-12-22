@@ -3,10 +3,11 @@
 const char *vertSrc =
   "attribute vec4 a_Position;              " \
   "uniform mat4 u_Model;                   " \
+  "uniform mat4 u_Projection;              " \
   "                                        " \
   "void main()                             " \
   "{                                       " \
-  "  gl_Position = u_Model * a_Position;   " \
+  "  gl_Position = u_Projection * u_Model * a_Position;   " \
   "}                                       " \
   "                                        ";
 
@@ -138,6 +139,10 @@ ref(ReShader) _ReShaderCreate(ref(ReContext) context)
   _RePollForError();
   if(_(rtn).modelLoc == -1) panic("Shader did not provide specified uniform");
 
+  _(rtn).projectionLoc = glGetUniformLocation(_(rtn).id, "u_Projection");
+  _RePollForError();
+  if(_(rtn).projectionLoc == -1) panic("Shader did not provide specified uniform");
+
   return rtn;
 }
 
@@ -160,4 +165,9 @@ GLint _ReShaderColorLoc(ref(ReShader) ctx)
 GLint _ReShaderModelLoc(ref(ReShader) ctx)
 {
   return _(ctx).modelLoc;
+}
+
+GLint _ReShaderProjectionLoc(ref(ReShader) ctx)
+{
+  return _(ctx).projectionLoc;
 }

@@ -7,6 +7,8 @@ int main()
   SDL_GLContext glContext = 0;
   ReVec4 col = ReVec4Rgba(1, 1, 1, 1);
   ReMat4 model = ReMat4Identity();
+  ReMat4 projection = ReMat4Perspective(45, 1, 0.1f, 100.0f);
+  float rotation = 0;
 
   ref(ReContext) context = NULL;
   ref(ReRenderer) renderer = NULL;
@@ -50,16 +52,24 @@ int main()
       }
     }
 
-    col.w += 0.01f;
+    col.x += 0.01f;
+    rotation += 1;
 
-    if(col.w > 1)
+    if(col.x > 1)
     {
-      col.w = 0;
+      col.x = 0;
     }
+
+    model = ReMat4Identity();
+    model = ReMat4Translate(model, ReVec3Xyz(0, 0, -5));
+    model = ReMat4RotateY(model, rotation);
+    model = ReMat4Translate(model, ReVec3Xyz(0, 0, -1));
 
     ReRendererClear(renderer, ReVec4Rgba(0.39f, 0.58f, 0.93f, 1.0f));
 
+    ReRendererSetBackfaceCull(renderer, 0);
     ReRendererSetModel(renderer, model);
+    ReRendererSetProjection(renderer, projection);
     ReRendererSetColor(renderer, col);
     ReRendererSetPositionBuffer(renderer, positions);
     ReRendererRender(renderer);

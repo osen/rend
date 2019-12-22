@@ -33,6 +33,7 @@ void _ReShaderDestroy(ref(ReShader) ctx);
 GLuint _ReShaderId(ref(ReShader) ctx);
 GLint _ReShaderColorLoc(ref(ReShader) ctx);
 GLint _ReShaderModelLoc(ref(ReShader) ctx);
+GLint _ReShaderProjectionLoc(ref(ReShader) ctx);
 
 struct ReRenderer
 {

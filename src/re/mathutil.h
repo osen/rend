@@ -9,6 +9,15 @@ struct ReVec2
 
 struct ReVec2 ReVec2Xy(float x, float y);
 
+struct ReVec3
+{
+  float x;
+  float y;
+  float z;
+};
+
+struct ReVec3 ReVec3Xyz(float x, float y, float z);
+
 struct ReVec4
 {
   float x;
@@ -26,5 +35,9 @@ struct ReMat4
 };
 
 struct ReMat4 ReMat4Identity();
+struct ReMat4 ReMat4Perspective(float fov, float aspect, float near, float far);
+struct ReMat4 ReMat4Mul(struct ReMat4 a, struct ReMat4 b);
+struct ReMat4 ReMat4Translate(struct ReMat4 ctx, struct ReVec3 pos);
+struct ReMat4 ReMat4RotateY(struct ReMat4 ctx, float angle);
 
 #endif
