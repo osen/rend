@@ -29,6 +29,9 @@ ref(ReRenderer) ReContextCreateRenderer(ref(ReContext) ctx)
 
   rtn = allocate(ReRenderer);
   _(rtn).shader = _ReShaderCreate(ctx);
+  _(rtn).blend = 1;
+  _(rtn).backfaceCull = 1;
+  _(rtn).depthTest = 1;
 
   return rtn;
 }

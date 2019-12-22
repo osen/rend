@@ -1,4 +1,5 @@
 #include "stent.h"
+#include "mathutil.h"
 
 #include <GL/glew.h>
 
@@ -20,11 +21,13 @@ GLuint _ReBufferId(ref(ReBuffer) ctx);
 struct ReShader
 {
   GLuint id;
+  GLint colorLoc;
 };
 
 ref(ReShader) _ReShaderCreate(ref(ReContext) context);
 void _ReShaderDestroy(ref(ReShader) ctx);
 GLuint _ReShaderId(ref(ReShader) ctx);
+GLint _ReShaderColorLoc(ref(ReShader) ctx);
 
 struct ReRenderer
 {
@@ -32,6 +35,8 @@ struct ReRenderer
   ref(ReBuffer) position;
   int depthTest;
   int backfaceCull;
+  int blend;
+  struct ReVec4 color;
 };
 
 void _RePollForError();

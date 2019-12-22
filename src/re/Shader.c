@@ -10,10 +10,13 @@ const char *vertSrc =
   "                                        ";
 
 const char *fragSrc =
-  "void main()                        " \
-  "{                                  " \
-  "  gl_FragColor = vec4(1, 0, 0, 1); " \
-  "}                                  ";
+  "uniform vec4 u_Color;                    " \
+  "                                         " \
+  "void main()                              " \
+  "{                                        " \
+  "  vec4 col = vec4(1, 1, 1, 1) * u_Color; " \
+  "  gl_FragColor = col;                    " \
+  "}                                        ";
 
 ref(ReShader) _ReShaderCreate(ref(ReContext) context)
 {
@@ -126,6 +129,11 @@ ref(ReShader) _ReShaderCreate(ref(ReContext) context)
   glDeleteShader(fragId);
   _RePollForError();
 
+  _(rtn).colorLoc = glGetUniformLocation(_(rtn).id, "u_Color");
+  _RePollForError();
+
+  if(_(rtn).colorLoc == -1) panic("Shader did not provide specified uniform");
+
   return rtn;
 }
 
@@ -138,4 +146,9 @@ void _ReShaderDestroy(ref(ReShader) ctx)
 GLuint _ReShaderId(ref(ReShader) ctx)
 {
   return _(ctx).id;
+}
+
+GLint _ReShaderColorLoc(ref(ReShader) ctx)
+{
+  return _(ctx).colorLoc;
 }
