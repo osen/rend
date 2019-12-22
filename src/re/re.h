@@ -8,5 +8,6 @@
 
 typedef struct ReVec2 ReVec2;
 typedef struct ReVec4 ReVec4;
+typedef struct ReMat4 ReMat4;
 
 #endif

@@ -59,7 +59,7 @@ void ReRendererRender(ref(ReRenderer) ctx)
 
   glUseProgram(_ReShaderId(_(ctx).shader));
   _RePollForError();
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(0, _ReBufferType(_(ctx).position), GL_FLOAT, GL_FALSE, 0, 0);
   _RePollForError();
   glEnableVertexAttribArray(0);
   _RePollForError();
@@ -69,6 +69,10 @@ void ReRendererRender(ref(ReRenderer) ctx)
     _(ctx).color.y,
     _(ctx).color.z,
     _(ctx).color.w);
+  _RePollForError();
+
+  glUniformMatrix4fv(_ReShaderModelLoc(_(ctx).shader),
+    1, GL_FALSE, (float *)_(ctx).model.m);
   _RePollForError();
 
   glDrawArrays(GL_TRIANGLES, 0, ReBufferSize(_(ctx).position));
@@ -82,6 +86,9 @@ void ReRendererRender(ref(ReRenderer) ctx)
   glDisable(GL_DEPTH_TEST);
   _RePollForError();
   glDisable(GL_CULL_FACE);
+  _RePollForError();
+
+  glUseProgram(0);
   _RePollForError();
 }
 
@@ -98,5 +105,20 @@ void ReRendererSetBlend(ref(ReRenderer) ctx, int enabled)
 void ReRendererSetDepthTest(ref(ReRenderer) ctx, int enabled)
 {
   _(ctx).depthTest = enabled;
+}
+
+void ReRendererSetModel(ref(ReRenderer) ctx, struct ReMat4 model)
+{
+  _(ctx).model = model;
+}
+
+void ReRendererSetView(ref(ReRenderer) ctx, struct ReMat4 view)
+{
+  _(ctx).view = view;
+}
+
+void ReRendererSetProjection(ref(ReRenderer) ctx, struct ReMat4 projection)
+{
+  _(ctx).projection = projection;
 }
 

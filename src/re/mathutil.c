@@ -26,3 +26,15 @@ struct ReVec4 ReVec4Rgba(float r, float g, float b, float a)
 {
   return ReVec4Xyzw(r, g, b, a);
 }
+
+struct ReMat4 ReMat4Identity()
+{
+  struct ReMat4 rtn = {0};
+
+  rtn.m[0][0] = 1;
+  rtn.m[1][1] = 1;
+  rtn.m[2][2] = 1;
+  rtn.m[3][3] = 1;
+
+  return rtn;
+}

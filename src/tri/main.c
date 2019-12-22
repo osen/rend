@@ -6,6 +6,7 @@ int main()
   SDL_Window* window = NULL;
   SDL_GLContext glContext = 0;
   ReVec4 col = ReVec4Rgba(1, 1, 1, 1);
+  ReMat4 model = ReMat4Identity();
 
   ref(ReContext) context = NULL;
   ref(ReRenderer) renderer = NULL;
@@ -58,6 +59,7 @@ int main()
 
     ReRendererClear(renderer, ReVec4Rgba(0.39f, 0.58f, 0.93f, 1.0f));
 
+    ReRendererSetModel(renderer, model);
     ReRendererSetColor(renderer, col);
     ReRendererSetPositionBuffer(renderer, positions);
     ReRendererRender(renderer);

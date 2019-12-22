@@ -17,17 +17,22 @@ struct ReBuffer
 };
 
 GLuint _ReBufferId(ref(ReBuffer) ctx);
+int _ReBufferType(ref(ReBuffer) ctx);
 
 struct ReShader
 {
   GLuint id;
   GLint colorLoc;
+  GLint modelLoc;
+  GLint viewLoc;
+  GLint projectionLoc;
 };
 
 ref(ReShader) _ReShaderCreate(ref(ReContext) context);
 void _ReShaderDestroy(ref(ReShader) ctx);
 GLuint _ReShaderId(ref(ReShader) ctx);
 GLint _ReShaderColorLoc(ref(ReShader) ctx);
+GLint _ReShaderModelLoc(ref(ReShader) ctx);
 
 struct ReRenderer
 {
@@ -37,6 +42,9 @@ struct ReRenderer
   int backfaceCull;
   int blend;
   struct ReVec4 color;
+  struct ReMat4 model;
+  struct ReMat4 view;
+  struct ReMat4 projection;
 };
 
 void _RePollForError();

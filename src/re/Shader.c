@@ -2,10 +2,11 @@
 
 const char *vertSrc =
   "attribute vec4 a_Position;              " \
+  "uniform mat4 u_Model;                   " \
   "                                        " \
   "void main()                             " \
   "{                                       " \
-  "  gl_Position = a_Position;             " \
+  "  gl_Position = u_Model * a_Position;   " \
   "}                                       " \
   "                                        ";
 
@@ -131,8 +132,11 @@ ref(ReShader) _ReShaderCreate(ref(ReContext) context)
 
   _(rtn).colorLoc = glGetUniformLocation(_(rtn).id, "u_Color");
   _RePollForError();
-
   if(_(rtn).colorLoc == -1) panic("Shader did not provide specified uniform");
+
+  _(rtn).modelLoc = glGetUniformLocation(_(rtn).id, "u_Model");
+  _RePollForError();
+  if(_(rtn).modelLoc == -1) panic("Shader did not provide specified uniform");
 
   return rtn;
 }
@@ -151,4 +155,9 @@ GLuint _ReShaderId(ref(ReShader) ctx)
 GLint _ReShaderColorLoc(ref(ReShader) ctx)
 {
   return _(ctx).colorLoc;
+}
+
+GLint _ReShaderModelLoc(ref(ReShader) ctx)
+{
+  return _(ctx).modelLoc;
 }

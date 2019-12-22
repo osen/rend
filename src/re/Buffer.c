@@ -60,3 +60,8 @@ GLuint _ReBufferId(ref(ReBuffer) ctx)
 
   return _(ctx).id;
 }
+
+int _ReBufferType(ref(ReBuffer) ctx)
+{
+  return _(ctx).type;
+}
