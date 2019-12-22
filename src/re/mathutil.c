@@ -139,6 +139,75 @@ struct ReMat4 ReMat4RotateY(struct ReMat4 ctx, float angle)
   return ReMat4Mul(ctx, rtn);
 }
 
+struct ReMat4 ReMat4RotateZ(struct ReMat4 ctx, float angle)
+{
+  struct ReMat4 rtn = {0};
+  float s = 0;
+  float c = 0;
+
+  angle = angle * M_PI / 180.0;
+
+  s = sinf(angle);
+  c = cosf(angle);
+
+  rtn.m[0][0] = c;
+  rtn.m[0][1] = s;
+  rtn.m[0][2] = 0.f;
+  rtn.m[0][3] = 0.f;
+
+  rtn.m[1][0] = -s;
+  rtn.m[1][1] = c;
+  rtn.m[1][2] = 0.f;
+  rtn.m[1][3] = 0.f;
+
+  rtn.m[2][0] = 0.f;
+  rtn.m[2][1] = 0.f;
+  rtn.m[2][2] = 1.f;
+  rtn.m[2][3] = 0.f;
+
+  rtn.m[3][0] = 0.f;
+  rtn.m[3][1] = 0.f;
+  rtn.m[3][2] = 0.f;
+  rtn.m[3][3] = 1.f;
+
+  return ReMat4Mul(ctx, rtn);
+}
+
+
+struct ReMat4 ReMat4RotateX(struct ReMat4 ctx, float angle)
+{
+  struct ReMat4 rtn = {0};
+  float s = 0;
+  float c = 0;
+
+  angle = angle * M_PI / 180.0;
+
+  s = sinf(angle);
+  c = cosf(angle);
+
+  rtn.m[0][0] = 1.f;
+  rtn.m[0][1] = 0.f;
+  rtn.m[0][2] = 0.f;
+  rtn.m[0][3] = 0.f;
+
+  rtn.m[1][0] = 0.f;
+  rtn.m[1][1] = c;
+  rtn.m[1][2] = s;
+  rtn.m[1][3] = 0.f;
+
+  rtn.m[2][0] = 0.f;
+  rtn.m[2][1] = -s;
+  rtn.m[2][2] = c;
+  rtn.m[2][3] = 0.f;
+
+  rtn.m[3][0] = 0.f;
+  rtn.m[3][1] = 0.f;
+  rtn.m[3][2] = 0.f;
+  rtn.m[3][3] = 1.f;
+
+  return ReMat4Mul(ctx, rtn);
+}
+
 struct ReMat4 ReMat4Translate(struct ReMat4 ctx, struct ReVec3 pos)
 {
   struct ReMat4 rtn = ReMat4Identity();
@@ -150,3 +219,48 @@ struct ReMat4 ReMat4Translate(struct ReMat4 ctx, struct ReVec3 pos)
   return ReMat4Mul(ctx, rtn);
 }
 
+struct ReMat4 ReMat4Inverse(struct ReMat4 ctx)
+{
+  struct ReMat4 rtn = {0};
+
+  float s[6] = {0};
+  float c[6] = {0};
+  s[0] = ctx.m[0][0]*ctx.m[1][1] - ctx.m[1][0]*ctx.m[0][1];
+  s[1] = ctx.m[0][0]*ctx.m[1][2] - ctx.m[1][0]*ctx.m[0][2];
+  s[2] = ctx.m[0][0]*ctx.m[1][3] - ctx.m[1][0]*ctx.m[0][3];
+  s[3] = ctx.m[0][1]*ctx.m[1][2] - ctx.m[1][1]*ctx.m[0][2];
+  s[4] = ctx.m[0][1]*ctx.m[1][3] - ctx.m[1][1]*ctx.m[0][3];
+  s[5] = ctx.m[0][2]*ctx.m[1][3] - ctx.m[1][2]*ctx.m[0][3];
+
+  c[0] = ctx.m[2][0]*ctx.m[3][1] - ctx.m[3][0]*ctx.m[2][1];
+  c[1] = ctx.m[2][0]*ctx.m[3][2] - ctx.m[3][0]*ctx.m[2][2];
+  c[2] = ctx.m[2][0]*ctx.m[3][3] - ctx.m[3][0]*ctx.m[2][3];
+  c[3] = ctx.m[2][1]*ctx.m[3][2] - ctx.m[3][1]*ctx.m[2][2];
+  c[4] = ctx.m[2][1]*ctx.m[3][3] - ctx.m[3][1]*ctx.m[2][3];
+  c[5] = ctx.m[2][2]*ctx.m[3][3] - ctx.m[3][2]*ctx.m[2][3];
+
+  /* Assumes it is invertible */
+  float idet = 1.0f/(s[0]*c[5]-s[1]*c[4]+s[2]*c[3]+s[3]*c[2]-s[4]*c[1]+s[5]*c[0]);
+
+  rtn.m[0][0] = ( ctx.m[1][1] * c[5] - ctx.m[1][2] * c[4] + ctx.m[1][3] * c[3]) * idet;
+  rtn.m[0][1] = (-ctx.m[0][1] * c[5] + ctx.m[0][2] * c[4] - ctx.m[0][3] * c[3]) * idet;
+  rtn.m[0][2] = ( ctx.m[3][1] * s[5] - ctx.m[3][2] * s[4] + ctx.m[3][3] * s[3]) * idet;
+  rtn.m[0][3] = (-ctx.m[2][1] * s[5] + ctx.m[2][2] * s[4] - ctx.m[2][3] * s[3]) * idet;
+
+  rtn.m[1][0] = (-ctx.m[1][0] * c[5] + ctx.m[1][2] * c[2] - ctx.m[1][3] * c[1]) * idet;
+  rtn.m[1][1] = ( ctx.m[0][0] * c[5] - ctx.m[0][2] * c[2] + ctx.m[0][3] * c[1]) * idet;
+  rtn.m[1][2] = (-ctx.m[3][0] * s[5] + ctx.m[3][2] * s[2] - ctx.m[3][3] * s[1]) * idet;
+  rtn.m[1][3] = ( ctx.m[2][0] * s[5] - ctx.m[2][2] * s[2] + ctx.m[2][3] * s[1]) * idet;
+
+  rtn.m[2][0] = ( ctx.m[1][0] * c[4] - ctx.m[1][1] * c[2] + ctx.m[1][3] * c[0]) * idet;
+  rtn.m[2][1] = (-ctx.m[0][0] * c[4] + ctx.m[0][1] * c[2] - ctx.m[0][3] * c[0]) * idet;
+  rtn.m[2][2] = ( ctx.m[3][0] * s[4] - ctx.m[3][1] * s[2] + ctx.m[3][3] * s[0]) * idet;
+  rtn.m[2][3] = (-ctx.m[2][0] * s[4] + ctx.m[2][1] * s[2] - ctx.m[2][3] * s[0]) * idet;
+
+  rtn.m[3][0] = (-ctx.m[1][0] * c[3] + ctx.m[1][1] * c[1] - ctx.m[1][2] * c[0]) * idet;
+  rtn.m[3][1] = ( ctx.m[0][0] * c[3] - ctx.m[0][1] * c[1] + ctx.m[0][2] * c[0]) * idet;
+  rtn.m[3][2] = (-ctx.m[3][0] * s[3] + ctx.m[3][1] * s[1] - ctx.m[3][2] * s[0]) * idet;
+  rtn.m[3][3] = ( ctx.m[2][0] * s[3] - ctx.m[2][1] * s[1] + ctx.m[2][2] * s[0]) * idet;
+
+  return rtn;
+}

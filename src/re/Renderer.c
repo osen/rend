@@ -75,6 +75,10 @@ void ReRendererRender(ref(ReRenderer) ctx)
     1, GL_FALSE, (float *)_(ctx).projection.m);
   _RePollForError();
 
+  glUniformMatrix4fv(_ReShaderViewLoc(_(ctx).shader),
+    1, GL_FALSE, (float *)_(ctx).view.m);
+  _RePollForError();
+
   glUniformMatrix4fv(_ReShaderModelLoc(_(ctx).shader),
     1, GL_FALSE, (float *)_(ctx).model.m);
   _RePollForError();

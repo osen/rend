@@ -38,6 +38,9 @@ struct ReMat4 ReMat4Identity();
 struct ReMat4 ReMat4Perspective(float fov, float aspect, float near, float far);
 struct ReMat4 ReMat4Mul(struct ReMat4 a, struct ReMat4 b);
 struct ReMat4 ReMat4Translate(struct ReMat4 ctx, struct ReVec3 pos);
+struct ReMat4 ReMat4RotateX(struct ReMat4 ctx, float angle);
 struct ReMat4 ReMat4RotateY(struct ReMat4 ctx, float angle);
+struct ReMat4 ReMat4RotateZ(struct ReMat4 ctx, float angle);
+struct ReMat4 ReMat4Inverse(struct ReMat4 ctx);
 
 #endif

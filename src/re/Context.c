@@ -33,6 +33,7 @@ ref(ReRenderer) ReContextCreateRenderer(ref(ReContext) ctx)
   _(rtn).backfaceCull = 1;
   _(rtn).depthTest = 1;
   _(rtn).projection = ReMat4Identity();
+  _(rtn).view = ReMat4Identity();
   _(rtn).model = ReMat4Identity();
 
   return rtn;
