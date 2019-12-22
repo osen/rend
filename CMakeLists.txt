@@ -29,6 +29,7 @@ add_library(re
   src/re/mathutil.c
   src/re/Buffer.c
   src/re/internal.c
+  src/re/Shader.c
 )
 if(MSVC)
   target_link_libraries(re glew32 opengl32)

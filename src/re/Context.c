@@ -28,6 +28,7 @@ ref(ReRenderer) ReContextCreateRenderer(ref(ReContext) ctx)
   ref(ReRenderer) rtn = NULL;
 
   rtn = allocate(ReRenderer);
+  _(rtn).shader = _ReShaderCreate(ctx);
 
   return rtn;
 }

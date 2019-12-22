@@ -5,6 +5,7 @@
 
 void ReRendererDestroy(ref(ReRenderer) ctx)
 {
+  _ReShaderDestroy(_(ctx).shader);
   release(ctx);
 }
 
@@ -31,9 +32,13 @@ void ReRendererRender(ref(ReRenderer) ctx)
   glBindBuffer(GL_ARRAY_BUFFER, _ReBufferId(_(ctx).position));
   _RePollForError();
 
+  glUseProgram(_ReShaderId(_(ctx).shader));
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(0);
+
   /* TODO: Temp FFP for triangle */
-  glVertexPointer(2, GL_FLOAT, 0, 0);
-  glEnableClientState(GL_VERTEX_ARRAY);
+  //glVertexPointer(2, GL_FLOAT, 0, 0);
+  //glEnableClientState(GL_VERTEX_ARRAY);
 
   glDrawArrays(GL_TRIANGLES, 0, ReBufferSize(_(ctx).position));
   _RePollForError();
