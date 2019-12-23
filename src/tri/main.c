@@ -1,5 +1,8 @@
 #include <re/re.h>
 #include <SDL2/SDL.h>
+#include <GL/glew.h>
+
+#define MOUSE_SENSITIVITY 0.5f;
 
 struct State;
 
@@ -10,14 +13,25 @@ struct Camera
   ref(State) state;
 };
 
+struct Object
+{
+  int id;
+  int type;
+  ReVec3 position;
+  ReVec3 rotation;
+  ReVec3 scale;
+  ref(State) state;
+};
+
 struct State
 {
   SDL_Window *window;
   SDL_GLContext glContext;
-  ref(Camera) camera;
   ReVec2 keyboard;
   ReVec2 mouse;
   ReVec2 mouseGrab;
+  ref(Camera) camera;
+  vector(ref(Object)) objects;
 };
 
 ref(State) StateCreate();
@@ -181,12 +195,15 @@ ref(State) StateCreate()
   _(cam).position = ReVec3Xyz(0, 10, 10);
   _(cam).rotation = ReVec3Xyz(-45, 0, 0);
 
+  _(rtn).objects = vector_new(ref(Object));
+
   return rtn;
 }
 
 void StateDestroy(ref(State) ctx)
 {
   release(_(ctx).camera);
+  vector_delete(_(ctx).objects);
 
   SDL_GL_DeleteContext(_(ctx).glContext);
   SDL_DestroyWindow(_(ctx).window);
@@ -211,8 +228,8 @@ void CameraUpdate(ref(Camera) ctx)
   {
     SDL_WarpMouseInWindow(_(state).window, mg.x, mg.y);
     mouse = _(state).mouse;
-    _(ctx).rotation.x -= mouse.y - mg.y;
-    _(ctx).rotation.y += mouse.x - mg.x;
+    _(ctx).rotation.x -= (mouse.y - mg.y) * MOUSE_SENSITIVITY;
+    _(ctx).rotation.y += (mouse.x - mg.x) * MOUSE_SENSITIVITY;
   }
 
   keyboard = _(state).keyboard;
@@ -237,6 +254,12 @@ ReMat4 CameraView(ref(Camera) ctx)
 
 ReMat4 CameraProjection(ref(Camera) ctx)
 {
-  return ReMat4Perspective(45, 1, 0.1f, 100.0f);
+  int w = 0;
+  int h = 0;
+
+  SDL_GetWindowSize(_(_(ctx).state).window, &w, &h);
+  glViewport(0, 0, w, h);
+
+  return ReMat4Perspective(45, (float)w / (float)h, 0.1f, 100.0f);
 }
 
