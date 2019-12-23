@@ -12,9 +12,11 @@ struct Camera
 
 struct State
 {
+  SDL_Window* window;
   ref(Camera) camera;
   vector(int) keys;
   ReVec2 mouse;
+  ReVec2 mouseGrab;
   vector(int) buttons;
 };
 
@@ -25,7 +27,6 @@ ReMat4 CameraProjection(ref(Camera) ctx);
 
 int main()
 {
-  SDL_Window* window = NULL;
   SDL_GLContext glContext = 0;
   ReVec4 col = ReVec4Rgba(1, 1, 1, 1);
   ReMat4 model = ReMat4Identity();
@@ -38,17 +39,17 @@ int main()
 
   state = StateCreate();
 
-  window = SDL_CreateWindow("Re Test",
+  _(state).window = SDL_CreateWindow("Re Test",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     800, 600,
     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-  if(!window)
+  if(!_(state).window)
   {
     panic("Failed to create window");
   }
 
-  glContext = SDL_GL_CreateContext(window);
+  glContext = SDL_GL_CreateContext(_(state).window);
 
   if(!glContext)
   {
@@ -73,6 +74,20 @@ int main()
       if(e.type == SDL_QUIT)
       {
         running = 0;
+      }
+      else if(e.type == SDL_MOUSEMOTION)
+      {
+        _(state).mouse = ReVec2Xy(e.motion.x, e.motion.y);
+      }
+      else if(e.type == SDL_MOUSEBUTTONDOWN)
+      {
+        _(state).mouse = ReVec2Xy(e.button.x, e.button.y);
+        _(state).mouseGrab = _(state).mouse;
+      }
+      else if(e.type == SDL_MOUSEBUTTONUP)
+      {
+        _(state).mouse = ReVec2Xy(e.button.x, e.button.y);
+        _(state).mouseGrab = ReVec2Xy(-1, -1);
       }
     }
 
@@ -102,7 +117,7 @@ int main()
     ReRendererSetPositionBuffer(renderer, positions);
     ReRendererRender(renderer);
 
-    SDL_GL_SwapWindow(window);
+    SDL_GL_SwapWindow(_(state).window);
   }
 
   ReBufferDestroy(positions);
@@ -110,7 +125,7 @@ int main()
   ReContextDestroy(context);
 
   SDL_GL_DeleteContext(glContext);
-  SDL_DestroyWindow(window);
+  SDL_DestroyWindow(_(state).window);
   SDL_Quit();
 
   return 0;
@@ -123,6 +138,7 @@ ref(State) StateCreate()
 
   rtn = allocate(State);
   _(rtn).camera = allocate(Camera);
+  _(rtn).mouseGrab = ReVec2Xy(-1, -1);
 
   cam = _(rtn).camera;
   _(cam).state = rtn;
@@ -134,12 +150,26 @@ ref(State) StateCreate()
 
 void CameraUpdate(ref(Camera) ctx)
 {
+  ref(State) state = NULL;
   ReMat4 m = CameraView(ctx);
   ReVec4 v = {0};
+  ReVec2 mouse = {0};
+  ReVec2 mg = {0};
 
+  state = _(ctx).state;
   m = ReMat4Inverse(m);
   m = ReMat4Translate(m, ReVec3Xyz(0, 0, 0.1f));
   v = ReMat4MulVec4(m, ReVec4Xyzw(0, 0, 0, 1));
+
+  mg = _(_(ctx).state).mouseGrab;
+
+  if(mg.x != -1)
+  {
+    SDL_WarpMouseInWindow(_(state).window, mg.x, mg.y);
+    mouse = _(state).mouse;
+    _(ctx).rotation.x -= mouse.y - mg.y;
+    _(ctx).rotation.y += mouse.x - mg.x;
+  }
 
   //_(ctx).position = ReVec3Xyz(v.x, v.y, v.z);
 }
@@ -149,6 +179,7 @@ ReMat4 CameraView(ref(Camera) ctx)
   ReMat4 rtn = ReMat4Identity();
 
   rtn = ReMat4Translate(rtn, _(ctx).position);
+  rtn = ReMat4RotateY(rtn, _(ctx).rotation.y);
   rtn = ReMat4RotateX(rtn, _(ctx).rotation.x);
   rtn = ReMat4Inverse(rtn);
 
