@@ -42,6 +42,7 @@ struct ReMat4 ReMat4RotateX(struct ReMat4 ctx, float angle);
 struct ReMat4 ReMat4RotateY(struct ReMat4 ctx, float angle);
 struct ReMat4 ReMat4RotateZ(struct ReMat4 ctx, float angle);
 struct ReMat4 ReMat4Inverse(struct ReMat4 ctx);
+struct ReMat4 ReMat4Transpose(struct ReMat4 ctx);
 struct ReVec4 ReMat4MulVec4(struct ReMat4 ctx, struct ReVec4 val);
 
 #endif

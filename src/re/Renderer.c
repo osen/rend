@@ -100,6 +100,10 @@ void ReRendererRender(ref(ReRenderer) ctx)
     1, GL_FALSE, (float *)_(ctx).model.m);
   _RePollForError();
 
+  glUniformMatrix4fv(_ReShaderNormalLoc(_(ctx).shader),
+    1, GL_FALSE, (float *)ReMat4Transpose(ReMat4Inverse(_(ctx).model)).m);
+  _RePollForError();
+
   glDrawArrays(GL_TRIANGLES, 0, ReBufferSize(_(ctx).position));
   _RePollForError();
 

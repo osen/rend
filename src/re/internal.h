@@ -26,6 +26,7 @@ struct ReShader
   GLint modelLoc;
   GLint viewLoc;
   GLint projectionLoc;
+  GLint normalLoc;
 };
 
 ref(ReShader) _ReShaderCreate(ref(ReContext) context);
@@ -35,6 +36,7 @@ GLint _ReShaderColorLoc(ref(ReShader) ctx);
 GLint _ReShaderModelLoc(ref(ReShader) ctx);
 GLint _ReShaderViewLoc(ref(ReShader) ctx);
 GLint _ReShaderProjectionLoc(ref(ReShader) ctx);
+GLint _ReShaderNormalLoc(ref(ReShader) ctx);
 
 struct ReRenderer
 {
