@@ -12,22 +12,22 @@ struct Camera
 
 struct State
 {
-  SDL_Window* window;
+  SDL_Window *window;
+  SDL_GLContext glContext;
   ref(Camera) camera;
-  vector(int) keys;
+  ReVec2 keyboard;
   ReVec2 mouse;
   ReVec2 mouseGrab;
-  vector(int) buttons;
 };
 
 ref(State) StateCreate();
+void StateDestroy(ref(State) ctx);
 void CameraUpdate(ref(Camera) ctx);
 ReMat4 CameraView(ref(Camera) ctx);
 ReMat4 CameraProjection(ref(Camera) ctx);
 
 int main()
 {
-  SDL_GLContext glContext = 0;
   ReVec4 col = ReVec4Rgba(1, 1, 1, 1);
   ReMat4 model = ReMat4Identity();
   float rotation = 0;
@@ -38,23 +38,6 @@ int main()
   ref(ReBuffer) positions = NULL;
 
   state = StateCreate();
-
-  _(state).window = SDL_CreateWindow("Re Test",
-    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    800, 600,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-
-  if(!_(state).window)
-  {
-    panic("Failed to create window");
-  }
-
-  glContext = SDL_GL_CreateContext(_(state).window);
-
-  if(!glContext)
-  {
-    panic("Failed to create OpenGL context");
-  }
 
   context = ReContextCreate();
   renderer = ReContextCreateRenderer(context);
@@ -79,15 +62,47 @@ int main()
       {
         _(state).mouse = ReVec2Xy(e.motion.x, e.motion.y);
       }
-      else if(e.type == SDL_MOUSEBUTTONDOWN)
+      else if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT)
       {
         _(state).mouse = ReVec2Xy(e.button.x, e.button.y);
         _(state).mouseGrab = _(state).mouse;
       }
-      else if(e.type == SDL_MOUSEBUTTONUP)
+      else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT)
       {
         _(state).mouse = ReVec2Xy(e.button.x, e.button.y);
         _(state).mouseGrab = ReVec2Xy(-1, -1);
+      }
+      else if(e.type == SDL_KEYDOWN)
+      {
+        if(e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w)
+        {
+          _(state).keyboard.y = 1;
+        }
+        else if(e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s)
+        {
+          _(state).keyboard.y = -1;
+        }
+        else if(e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d)
+        {
+          _(state).keyboard.x = 1;
+        }
+        else if(e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
+        {
+          _(state).keyboard.x = -1;
+        }
+      }
+      else if(e.type == SDL_KEYUP)
+      {
+        if(e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w ||
+          e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s)
+        {
+          _(state).keyboard.y = 0;
+        }
+        else if(e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d ||
+          e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a)
+        {
+          _(state).keyboard.x = 0;
+        }
       }
     }
 
@@ -104,8 +119,8 @@ int main()
     model = ReMat4Identity();
     model = ReMat4Translate(model, ReVec3Xyz(0, 0, 0));
     model = ReMat4RotateY(model, rotation);
-    model = ReMat4Translate(model, ReVec3Xyz(0, 0, -3));
-    model = ReMat4RotateZ(model, -rotation * 2);
+    //model = ReMat4Translate(model, ReVec3Xyz(0, 0, -3));
+    //model = ReMat4RotateZ(model, -rotation * 2);
 
     ReRendererClear(renderer, ReVec4Rgba(0.39f, 0.58f, 0.93f, 1.0f));
 
@@ -124,9 +139,7 @@ int main()
   ReRendererDestroy(renderer);
   ReContextDestroy(context);
 
-  SDL_GL_DeleteContext(glContext);
-  SDL_DestroyWindow(_(state).window);
-  SDL_Quit();
+  StateDestroy(state);
 
   return 0;
 }
@@ -136,7 +149,30 @@ ref(State) StateCreate()
   ref(State) rtn = NULL;
   ref(Camera) cam = NULL;
 
+  if(SDL_Init(SDL_INIT_VIDEO) != 0)
+  {
+    panic("Failed to initialize window system");
+  }
+
   rtn = allocate(State);
+
+  _(rtn).window = SDL_CreateWindow("Re Test",
+    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    800, 600,
+    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+  if(!_(rtn).window)
+  {
+    panic("Failed to create window");
+  }
+
+  _(rtn).glContext = SDL_GL_CreateContext(_(rtn).window);
+
+  if(!_(rtn).glContext)
+  {
+    panic("Failed to create OpenGL context");
+  }
+
   _(rtn).camera = allocate(Camera);
   _(rtn).mouseGrab = ReVec2Xy(-1, -1);
 
@@ -148,19 +184,27 @@ ref(State) StateCreate()
   return rtn;
 }
 
+void StateDestroy(ref(State) ctx)
+{
+  release(_(ctx).camera);
+
+  SDL_GL_DeleteContext(_(ctx).glContext);
+  SDL_DestroyWindow(_(ctx).window);
+  SDL_Quit();
+
+  release(ctx);
+}
+
 void CameraUpdate(ref(Camera) ctx)
 {
   ref(State) state = NULL;
   ReMat4 m = CameraView(ctx);
   ReVec4 v = {0};
   ReVec2 mouse = {0};
+  ReVec2 keyboard = {0};
   ReVec2 mg = {0};
 
   state = _(ctx).state;
-  m = ReMat4Inverse(m);
-  m = ReMat4Translate(m, ReVec3Xyz(0, 0, 0.1f));
-  v = ReMat4MulVec4(m, ReVec4Xyzw(0, 0, 0, 1));
-
   mg = _(_(ctx).state).mouseGrab;
 
   if(mg.x != -1)
@@ -171,7 +215,12 @@ void CameraUpdate(ref(Camera) ctx)
     _(ctx).rotation.y += mouse.x - mg.x;
   }
 
-  //_(ctx).position = ReVec3Xyz(v.x, v.y, v.z);
+  keyboard = _(state).keyboard;
+
+  m = ReMat4Inverse(m);
+  m = ReMat4Translate(m, ReVec3Xyz(keyboard.x * 0.1f, 0, keyboard.y * -0.1f));
+  v = ReMat4MulVec4(m, ReVec4Xyzw(0, 0, 0, 1));
+  _(ctx).position = ReVec3Xyz(v.x, v.y, v.z);
 }
 
 ReMat4 CameraView(ref(Camera) ctx)
