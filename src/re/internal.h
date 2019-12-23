@@ -40,6 +40,7 @@ struct ReRenderer
 {
   ref(ReShader) shader;
   ref(ReBuffer) position;
+  ref(ReBuffer) normal;
   int depthTest;
   int backfaceCull;
   int blend;

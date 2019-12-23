@@ -23,6 +23,21 @@ void ReBufferAddVec2(ref(ReBuffer) ctx, struct ReVec2 val)
   vector_push_back(_(ctx).data, val.y);
 }
 
+void ReBufferAddVec3(ref(ReBuffer) ctx, struct ReVec3 val)
+{
+  if(_(ctx).type != 0 && _(ctx).type != 3)
+  {
+    panic("Attempt to add mixed types to buffer");
+  }
+
+  _(ctx).dirty = 1;
+  _(ctx).type = 3;
+  vector_push_back(_(ctx).data, val.x);
+  vector_push_back(_(ctx).data, val.y);
+  vector_push_back(_(ctx).data, val.z);
+}
+
+
 size_t ReBufferSize(ref(ReBuffer) ctx)
 {
   if(!_(ctx).type)

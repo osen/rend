@@ -42,7 +42,7 @@ ReMat4 CameraProjection(ref(Camera) ctx);
 
 int main()
 {
-  ReVec4 col = ReVec4Rgba(1, 1, 1, 1);
+  ReVec4 col = ReVec4Rgba(1, 0, 0, 0.5f);
   ReMat4 model = ReMat4Identity();
   float rotation = 0;
   ref(State) state = NULL;
@@ -50,6 +50,7 @@ int main()
   ref(ReContext) context = NULL;
   ref(ReRenderer) renderer = NULL;
   ref(ReBuffer) positions = NULL;
+  ref(ReBuffer) normals = NULL;
 
   state = StateCreate();
 
@@ -60,6 +61,11 @@ int main()
   ReBufferAddVec2(positions, ReVec2Xy(0, 0.5f));
   ReBufferAddVec2(positions, ReVec2Xy(-0.5f, -0.5f));
   ReBufferAddVec2(positions, ReVec2Xy(0.5f, -0.5f));
+
+  normals = ReContextCreateBuffer(context);
+  ReBufferAddVec3(normals, ReVec3Xyz(0, 0, 1));
+  ReBufferAddVec3(normals, ReVec3Xyz(0, 0, 1));
+  ReBufferAddVec3(normals, ReVec3Xyz(0, 0, 1));
 
   int running = 1;
   SDL_Event e = {0};
@@ -130,6 +136,8 @@ int main()
       col.x = 0;
     }
 
+    col.x = 1;
+
     model = ReMat4Identity();
     model = ReMat4Translate(model, ReVec3Xyz(0, 0, 0));
     model = ReMat4RotateY(model, rotation);
@@ -144,12 +152,14 @@ int main()
     ReRendererSetProjection(renderer, CameraProjection(_(state).camera));
     ReRendererSetColor(renderer, col);
     ReRendererSetPositionBuffer(renderer, positions);
+    ReRendererSetNormalBuffer(renderer, normals);
     ReRendererRender(renderer);
 
     SDL_GL_SwapWindow(_(state).window);
   }
 
   ReBufferDestroy(positions);
+  ReBufferDestroy(normals);
   ReRendererDestroy(renderer);
   ReContextDestroy(context);
 

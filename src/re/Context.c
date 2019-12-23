@@ -35,6 +35,7 @@ ref(ReRenderer) ReContextCreateRenderer(ref(ReContext) ctx)
   _(rtn).projection = ReMat4Identity();
   _(rtn).view = ReMat4Identity();
   _(rtn).model = ReMat4Identity();
+  _(rtn).color = ReVec4Rgba(1, 1, 1, 1);
 
   return rtn;
 }

@@ -22,6 +22,11 @@ void ReRendererSetPositionBuffer(ref(ReRenderer) ctx, ref(ReBuffer) buffer)
   _(ctx).position = buffer;
 }
 
+void ReRendererSetNormalBuffer(ref(ReRenderer) ctx, ref(ReBuffer) buffer)
+{
+  _(ctx).normal = buffer;
+}
+
 void ReRendererSetColor(ref(ReRenderer) ctx, struct ReVec4 col)
 {
   _(ctx).color = col;
@@ -29,11 +34,6 @@ void ReRendererSetColor(ref(ReRenderer) ctx, struct ReVec4 col)
 
 void ReRendererRender(ref(ReRenderer) ctx)
 {
-  if(!_(ctx).position)
-  {
-    panic("No position buffer set");
-  }
-
   if(_(ctx).blend)
   {
     glEnable(GL_BLEND);
@@ -54,15 +54,32 @@ void ReRendererRender(ref(ReRenderer) ctx)
     _RePollForError();
   }
 
+  glUseProgram(_ReShaderId(_(ctx).shader));
+  _RePollForError();
+
+  if(!_(ctx).position)
+  {
+    panic("No position buffer set");
+  }
+
   glBindBuffer(GL_ARRAY_BUFFER, _ReBufferId(_(ctx).position));
   _RePollForError();
 
-  glUseProgram(_ReShaderId(_(ctx).shader));
-  _RePollForError();
   glVertexAttribPointer(0, _ReBufferType(_(ctx).position), GL_FLOAT, GL_FALSE, 0, 0);
   _RePollForError();
   glEnableVertexAttribArray(0);
   _RePollForError();
+
+  if(_(ctx).normal)
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, _ReBufferId(_(ctx).normal));
+    _RePollForError();
+
+    glVertexAttribPointer(1, _ReBufferType(_(ctx).normal), GL_FLOAT, GL_FALSE, 0, 0);
+    _RePollForError();
+    glEnableVertexAttribArray(1);
+    _RePollForError();
+  }
 
   glUniform4f(_ReShaderColorLoc(_(ctx).shader),
     _(ctx).color.x,

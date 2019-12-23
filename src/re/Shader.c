@@ -2,12 +2,19 @@
 
 const char *vertSrc =
   "attribute vec4 a_Position;              " \
+  "attribute vec3 a_Normal;                " \
+  "                                        " \
   "uniform mat4 u_Model;                   " \
   "uniform mat4 u_View;                    " \
   "uniform mat4 u_Projection;              " \
   "                                        " \
+  "varying vec3 v_Normal;                  " \
+  "varying vec3 v_FragPos;                 " \
+  "                                        " \
   "void main()                             " \
   "{                                       " \
+  "  v_Normal = vec3(u_Model * vec4(a_Normal, 0));                 " \
+  "  v_FragPos = vec3(u_Model * a_Position);                       " \
   "  gl_Position = u_Projection * u_View * u_Model * a_Position;   " \
   "}                                       " \
   "                                        ";
@@ -15,9 +22,17 @@ const char *vertSrc =
 const char *fragSrc =
   "uniform vec4 u_Color;                    " \
   "                                         " \
+  "varying vec3 v_Normal;                   " \
+  "varying vec3 v_FragPos;                  " \
+  "                                         " \
   "void main()                              " \
   "{                                        " \
+  "  vec3 lightPos = vec3(0, 0, 100);       " \
+  "  vec3 N = normalize(v_Normal);          " \
+  "  vec3 L = normalize(lightPos - v_FragPos); " \
+  "  float diff = max(dot(N, L), 0.0);      " \
   "  vec4 col = vec4(1, 1, 1, 1) * u_Color; " \
+  "  col.xyz = col.xyz * diff;              " \
   "  gl_FragColor = col;                    " \
   "}                                        ";
 
@@ -98,6 +113,9 @@ ref(ReShader) _ReShaderCreate(ref(ReContext) context)
   _RePollForError();
 
   glBindAttribLocation(_(rtn).id, 0, "a_Position");
+  _RePollForError();
+
+  glBindAttribLocation(_(rtn).id, 1, "a_Normal");
   _RePollForError();
 
   glLinkProgram(_(rtn).id);
