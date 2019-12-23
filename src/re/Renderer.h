@@ -19,3 +19,4 @@ void ReRendererRender(ref(ReRenderer) ctx);
 void ReRendererSetBackfaceCull(ref(ReRenderer) ctx, int enabled);
 void ReRendererSetBlend(ref(ReRenderer) ctx, int enabled);
 void ReRendererSetDepthTest(ref(ReRenderer) ctx, int enabled);
+void ReRendererSetLighting(ref(ReRenderer) ctx, int enabled);

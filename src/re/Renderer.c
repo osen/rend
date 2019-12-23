@@ -70,7 +70,14 @@ void ReRendererRender(ref(ReRenderer) ctx)
   glEnableVertexAttribArray(0);
   _RePollForError();
 
-  if(_(ctx).normal)
+  if(!_(ctx).normal)
+  {
+    if(_(ctx).lighting)
+    {
+      panic("Lighting enabled but no texture coordinates provided");
+    }
+  }
+  else
   {
     glBindBuffer(GL_ARRAY_BUFFER, _ReBufferId(_(ctx).normal));
     _RePollForError();
@@ -80,6 +87,9 @@ void ReRendererRender(ref(ReRenderer) ctx)
     glEnableVertexAttribArray(1);
     _RePollForError();
   }
+
+  glUniform1i(_ReShaderEnableLightingLoc(_(ctx).shader), _(ctx).lighting);
+  _RePollForError();
 
   glUniform4f(_ReShaderColorLoc(_(ctx).shader),
     _(ctx).color.x,
@@ -134,6 +144,11 @@ void ReRendererSetBlend(ref(ReRenderer) ctx, int enabled)
 void ReRendererSetDepthTest(ref(ReRenderer) ctx, int enabled)
 {
   _(ctx).depthTest = enabled;
+}
+
+void ReRendererSetLighting(ref(ReRenderer) ctx, int enabled)
+{
+  _(ctx).lighting = enabled;
 }
 
 void ReRendererSetModel(ref(ReRenderer) ctx, struct ReMat4 model)

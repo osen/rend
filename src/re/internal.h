@@ -27,6 +27,7 @@ struct ReShader
   GLint viewLoc;
   GLint projectionLoc;
   GLint normalLoc;
+  GLint enableLightingLoc;
 };
 
 ref(ReShader) _ReShaderCreate(ref(ReContext) context);
@@ -37,6 +38,7 @@ GLint _ReShaderModelLoc(ref(ReShader) ctx);
 GLint _ReShaderViewLoc(ref(ReShader) ctx);
 GLint _ReShaderProjectionLoc(ref(ReShader) ctx);
 GLint _ReShaderNormalLoc(ref(ReShader) ctx);
+GLint _ReShaderEnableLightingLoc(ref(ReShader) ctx);
 
 struct ReRenderer
 {
@@ -46,6 +48,7 @@ struct ReRenderer
   int depthTest;
   int backfaceCull;
   int blend;
+  int lighting;
   struct ReVec4 color;
   struct ReMat4 model;
   struct ReMat4 view;

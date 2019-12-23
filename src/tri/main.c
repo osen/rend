@@ -42,7 +42,7 @@ ReMat4 CameraProjection(ref(Camera) ctx);
 
 int main()
 {
-  ReVec4 col = ReVec4Rgba(1, 0, 0, 0.5f);
+  ReVec4 col = ReVec4Rgba(1, 0, 0, 1.0f);
   ReMat4 model = ReMat4Identity();
   float rotation = 0;
   ref(State) state = NULL;
@@ -146,6 +146,7 @@ int main()
 
     ReRendererClear(renderer, ReVec4Rgba(0.39f, 0.58f, 0.93f, 1.0f));
 
+    ReRendererSetLighting(renderer, 1);
     ReRendererSetBackfaceCull(renderer, 0);
     ReRendererSetModel(renderer, model);
     ReRendererSetView(renderer, CameraView(_(state).camera));

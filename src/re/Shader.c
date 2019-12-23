@@ -8,15 +8,19 @@ const char *vertSrc =
   "uniform mat4 u_View;                    " \
   "uniform mat4 u_Projection;              " \
   "uniform mat4 u_Normal;                  " \
+  "uniform bool u_EnableLighting;           " \
   "                                        " \
   "varying vec3 v_Normal;                  " \
   "varying vec3 v_FragPos;                 " \
   "                                        " \
   "void main()                             " \
   "{                                       " \
-  "  v_Normal = vec3(u_Normal * vec4(a_Normal, 0)); " \
-  "  v_FragPos = vec3(u_Model * a_Position);                       " \
-  "  gl_Position = u_Projection * u_View * u_Model * a_Position;   " \
+  "  if(u_EnableLighting)                  " \
+  "  {                                     " \
+  "    v_Normal = vec3(u_Normal * vec4(a_Normal, 0));            " \
+  "    v_FragPos = vec3(u_Model * a_Position);                   " \
+  "  }                                                           " \
+  "  gl_Position = u_Projection * u_View * u_Model * a_Position; " \
   "}                                       " \
   "                                        ";
 
@@ -27,18 +31,22 @@ const char *vertSrc =
 
 const char *fragSrc =
   "uniform vec4 u_Color;                    " \
+  "uniform bool u_EnableLighting;           " \
   "                                         " \
   "varying vec3 v_Normal;                   " \
   "varying vec3 v_FragPos;                  " \
   "                                         " \
   "void main()                              " \
   "{                                        " \
-  "  vec3 lightPos = vec3(0, 0, 100);       " \
-  "  vec3 N = normalize(v_Normal);          " \
-  "  vec3 L = normalize(lightPos - v_FragPos); " \
-  "  float diff = max(dot(N, L), 0.0);      " \
   "  vec4 col = vec4(1, 1, 1, 1) * u_Color; " \
-  "  col.xyz = col.xyz * diff;              " \
+  "  if(u_EnableLighting)                   " \
+  "  {                                      " \
+  "    vec3 lightPos = vec3(0, 0, 100);       " \
+  "    vec3 N = normalize(v_Normal);          " \
+  "    vec3 L = normalize(lightPos - v_FragPos); " \
+  "    float diff = max(dot(N, L), 0.0);      " \
+  "    col.xyz = col.xyz * diff;              " \
+  "  }                                      " \
   "  gl_FragColor = col;                    " \
   "}                                        ";
 
@@ -176,6 +184,10 @@ ref(ReShader) _ReShaderCreate(ref(ReContext) context)
   _RePollForError();
   if(_(rtn).normalLoc == -1) panic("Shader did not provide specified uniform");
 
+  _(rtn).enableLightingLoc = glGetUniformLocation(_(rtn).id, "u_EnableLighting");
+  _RePollForError();
+  if(_(rtn).enableLightingLoc == -1) panic("Shader did not provide specified uniform");
+
   return rtn;
 }
 
@@ -213,4 +225,9 @@ GLint _ReShaderProjectionLoc(ref(ReShader) ctx)
 GLint _ReShaderNormalLoc(ref(ReShader) ctx)
 {
   return _(ctx).normalLoc;
+}
+
+GLint _ReShaderEnableLightingLoc(ref(ReShader) ctx)
+{
+  return _(ctx).enableLightingLoc;
 }
