@@ -126,14 +126,22 @@ ref(State) StateCreate()
 
   cam = _(rtn).camera;
   _(cam).state = rtn;
+  _(cam).position = ReVec3Xyz(0, 10, 10);
+  _(cam).rotation = ReVec3Xyz(-45, 0, 0);
 
   return rtn;
 }
 
 void CameraUpdate(ref(Camera) ctx)
 {
-  _(ctx).position = ReVec3Xyz(0, 10, 10);
-  _(ctx).rotation = ReVec3Xyz(-45, 0, 0);
+  ReMat4 m = CameraView(ctx);
+  ReVec4 v = {0};
+
+  m = ReMat4Inverse(m);
+  m = ReMat4Translate(m, ReVec3Xyz(0, 0, 0.1f));
+  v = ReMat4MulVec4(m, ReVec4Xyzw(0, 0, 0, 1));
+
+  //_(ctx).position = ReVec3Xyz(v.x, v.y, v.z);
 }
 
 ReMat4 CameraView(ref(Camera) ctx)
@@ -151,3 +159,4 @@ ReMat4 CameraProjection(ref(Camera) ctx)
 {
   return ReMat4Perspective(45, 1, 0.1f, 100.0f);
 }
+

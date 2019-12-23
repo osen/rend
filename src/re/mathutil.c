@@ -264,3 +264,34 @@ struct ReMat4 ReMat4Inverse(struct ReMat4 ctx)
 
   return rtn;
 }
+
+struct ReVec4 ReMat4MulVec4(struct ReMat4 ctx, struct ReVec4 val)
+{
+  int i = 0;
+  int j = 0;
+  float v[4] = {0};
+  float r[4] = {0};
+  struct ReVec4 rtn = {0};
+
+  v[0] = val.x;
+  v[1] = val.y;
+  v[2] = val.z;
+  v[3] = val.w;
+
+  for(j = 0; j < 4; ++j)
+  {
+    r[j] = 0.f;
+
+    for(i=0; i<4; ++i)
+    {
+      r[j] += ctx.m[i][j] * v[i];
+    }
+  }
+
+  rtn.x = r[0];
+  rtn.y = r[1];
+  rtn.z = r[2];
+  rtn.w = r[3];
+
+  return rtn;
+}
