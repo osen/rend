@@ -107,8 +107,8 @@ int main()
     shader->setUniform("u_Projection", perspective(radians(45.0f), 1.0f, 0.1f, 100.0f));
 
     shader->setUniform("u_Model",
-      translate(vec3(0, 0, -10)) *
-      rotate(radians(angle), vec3(0, 1, 0))
+      translate(glm::mat4(1.0f), vec3(0, 0, -10)) *
+      rotate(glm::mat4(1.0f), radians(angle), vec3(0, 1, 0))
     );
 
     shader->setMesh(shape);

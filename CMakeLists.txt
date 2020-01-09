@@ -52,6 +52,11 @@ add_executable(mesh
 )
 target_link_libraries(mesh rend SDL2)
 
+add_executable(gui
+  src/gui/main.cpp
+)
+target_link_libraries(gui rend SDL2)
+
 add_executable(model
   src/model/main.cpp
 )

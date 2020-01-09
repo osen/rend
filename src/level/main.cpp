@@ -153,9 +153,9 @@ int main()
     shader->setUniform("u_Projection", perspective(radians(65.0f), 1.0f, 0.1f, 100.0f));
 
     shader->setUniform("u_Model",
-      rotate(radians(10.0f), vec3(1, 0, 0)) *
-      rotate(radians(angle), vec3(0, 1, 0)) *
-      translate(vec3(5, -2, 45))
+      rotate(glm::mat4(1.0f), radians(10.0f), vec3(1, 0, 0)) *
+      rotate(glm::mat4(1.0f), radians(angle), vec3(0, 1, 0)) *
+      translate(glm::mat4(1.0f), vec3(5, -2, 45))
     );
 
     shader->setMesh(shape);
