@@ -6,6 +6,7 @@ include_directories(
 )
 
 add_definitions(-DSTD_SR1_DEBUG)
+add_definitions(-DSDL_MAIN_HANDLED)
 
 add_library(rend
   src/rend/Exception.cpp
@@ -17,7 +18,7 @@ add_library(rend
   src/rend/Mesh.cpp
   src/rend/Util.cpp
 )
-if(MSVC)
+if(MSVC OR MINGW)
   target_link_libraries(rend glew32 opengl32)
 else()
   target_link_libraries(rend GLEW GL)
@@ -31,7 +32,7 @@ add_library(re
   src/re/internal.c
   src/re/Shader.c
 )
-if(MSVC)
+if(MSVC OR MINGW)
   target_link_libraries(re glew32 opengl32)
 else()
   target_link_libraries(re GLEW GL m)
