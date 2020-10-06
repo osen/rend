@@ -12,6 +12,7 @@ struct TextureAdapter
 {
   virtual GLuint getTexId() = 0;
   virtual ivec2 getSize() const = 0;
+
 };
 
 }

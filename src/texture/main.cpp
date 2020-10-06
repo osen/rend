@@ -2,7 +2,7 @@
 #include "stb_image.h"
 
 #include <rend/rend.h>
-#include <sr1/memory>
+#include <memory>
 #include <SDL2/SDL.h>
 
 #include <iostream>
@@ -69,11 +69,11 @@ int main()
     throw Exception("Failed to create OpenGL context");
   }
 
-  std::sr1::shared_ptr<Context> context = Context::initialize();
-  std::sr1::shared_ptr<Shader> shader = context->createShader();
+  std::shared_ptr<Context> context = Context::initialize();
+  std::shared_ptr<Shader> shader = context->createShader();
   shader->parse(src);
 
-  std::sr1::shared_ptr<Mesh> shape = context->createMesh();
+  std::shared_ptr<Mesh> shape = context->createMesh();
 
   {
     std::ifstream f("share/rend/samples/curuthers/curuthers.obj");
@@ -95,7 +95,7 @@ int main()
     shape->parse(obj);
   }
 
-  std::sr1::shared_ptr<Texture> texture = context->createTexture();
+  std::shared_ptr<Texture> texture = context->createTexture();
 
   {
     int w = 0;
@@ -128,8 +128,6 @@ int main()
     stbi_image_free(data);
   }
 
-  shape->setTexture("u_Texture", texture);
-
   bool running = true;
   SDL_Event e = {0};
 
@@ -157,6 +155,7 @@ int main()
       rotate(glm::mat4(1.0f), radians(angle), vec3(0, 1, 0))
     );
 
+    shader->setSampler("u_Texture", texture);
     shader->setMesh(shape);
     shader->render();
 

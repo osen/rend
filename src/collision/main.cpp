@@ -1,5 +1,5 @@
 #include <rend/rend.h>
-#include <sr1/memory>
+#include <memory>
 #include <SDL2/SDL.h>
 
 #include <iostream>
@@ -49,9 +49,9 @@ int main()
     throw Exception("Failed to create OpenGL context");
   }
 
-  std::sr1::shared_ptr<Context> context = Context::initialize();
+  std::shared_ptr<Context> context = Context::initialize();
 
-  std::sr1::shared_ptr<Shader> shader = context->createShader();
+  std::shared_ptr<Shader> shader = context->createShader();
   shader->parse(src);
 
   vec3 a1 = vec3(0, 0.4f, 0);
@@ -62,12 +62,12 @@ int main()
   vec3 b2 = vec3(-0.5f, 0.5f, 0);
   vec3 c2 = vec3(0.5f, 0.5f, 0);
 
-  std::sr1::shared_ptr<Buffer> shape1 = context->createBuffer();
+  std::shared_ptr<Buffer> shape1 = context->createBuffer();
   shape1->add(vec2(a1.x, a1.y));
   shape1->add(vec2(b1.x, b1.y));
   shape1->add(vec2(c1.x, c1.y));
 
-  std::sr1::shared_ptr<Buffer> shape2 = context->createBuffer();
+  std::shared_ptr<Buffer> shape2 = context->createBuffer();
   shape2->add(vec2(a2.x, a2.y));
   shape2->add(vec2(b2.x, b2.y));
   shape2->add(vec2(c2.x, c2.y));

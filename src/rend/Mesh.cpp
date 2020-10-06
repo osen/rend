@@ -27,9 +27,9 @@ struct Face
   vec2 lmcc;
 };
 
-void Mesh::setBuffer(const std::string& name, const std::sr1::shared_ptr<Buffer>& buffer)
+void Mesh::setBuffer(const std::string& name, const std::shared_ptr<Buffer>& buffer)
 {
-  for(std::sr1::vector<std::sr1::shared_ptr<BufferData> >::iterator it =
+  for(std::vector<std::shared_ptr<BufferData> >::iterator it =
     buffers.begin(); it != buffers.end(); it++)
   {
     if((*it)->name == name)
@@ -40,15 +40,15 @@ void Mesh::setBuffer(const std::string& name, const std::sr1::shared_ptr<Buffer>
     }
   }
 
-  std::sr1::shared_ptr<BufferData> bd = std::sr1::make_shared<BufferData>();
+  std::shared_ptr<BufferData> bd = std::make_shared<BufferData>();
   bd->name = name;
   bd->buffer = buffer;
   buffers.push_back(bd);
 }
 
-void Mesh::setTexture(const std::string& name, const std::sr1::shared_ptr<TextureAdapter>& texture)
+void Mesh::setTexture(const std::string& name, const std::shared_ptr<TextureAdapter>& texture)
 {
-  for(std::sr1::vector<std::sr1::shared_ptr<TextureData> >::iterator it =
+  for(std::vector<std::shared_ptr<TextureData> >::iterator it =
     textures.begin(); it != textures.end(); it++)
   {
     if((*it)->name == name)
@@ -59,7 +59,7 @@ void Mesh::setTexture(const std::string& name, const std::sr1::shared_ptr<Textur
     }
   }
 
-  std::sr1::shared_ptr<TextureData> td = std::sr1::make_shared<TextureData>();
+  std::shared_ptr<TextureData> td = std::make_shared<TextureData>();
   td->name = name;
   td->texture = texture;
   textures.push_back(td);
@@ -81,23 +81,23 @@ void Mesh::parse(const std::string& data)
 
 void Mesh::safeParse(const std::string& data, std::string& currentLine)
 {
-  std::sr1::vector<std::string> lines;
+  std::vector<std::string> lines;
   Util::splitStringLineEnding(data, lines);
 
-  std::sr1::vector<vec3> positions;
-  std::sr1::vector<vec2> tcs;
-  std::sr1::vector<vec3> normals;
-  std::sr1::vector<vec2> lmcs;
-  std::sr1::vector<Face> faces;
+  std::vector<vec3> positions;
+  std::vector<vec2> tcs;
+  std::vector<vec3> normals;
+  std::vector<vec2> lmcs;
+  std::vector<Face> faces;
 
-  for(std::sr1::vector<std::string>::iterator lit = lines.begin();
+  for(std::vector<std::string>::iterator lit = lines.begin();
     lit != lines.end(); lit++)
   {
     currentLine = *lit;
     if(lit->length() < 1) continue;
     //std::cout << "Line [" << *lit << "]" << std::endl;
 
-    std::sr1::vector<std::string> tokens;
+    std::vector<std::string> tokens;
     Util::splitStringWhitespace(*lit, tokens);
     if(tokens.size() < 1) continue;
 
@@ -129,7 +129,7 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
       if(tokens.size() < 4) continue;
 
       Face f;
-      std::sr1::vector<std::string> sub;
+      std::vector<std::string> sub;
       Util::splitString(tokens.at(1), '/', sub);
       if(sub.size() >= 1) f.pa = positions.at(atoi(sub.at(0).c_str()) - 1);
       if(sub.size() >= 2) f.tca = tcs.at(atoi(sub.at(1).c_str()) - 1);
@@ -174,9 +174,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
 
   if(positions.size() > 0)
   {
-    std::sr1::shared_ptr<Buffer> b = context->createBuffer();
+    std::shared_ptr<Buffer> b = context->createBuffer();
 
-    for(std::sr1::vector<Face>::iterator fit = faces.begin();
+    for(std::vector<Face>::iterator fit = faces.begin();
       fit != faces.end(); fit++)
     {
       b->add(fit->pa);
@@ -189,9 +189,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
 
   if(tcs.size() > 0)
   {
-    std::sr1::shared_ptr<Buffer> b = context->createBuffer();
+    std::shared_ptr<Buffer> b = context->createBuffer();
 
-    for(std::sr1::vector<Face>::iterator fit = faces.begin();
+    for(std::vector<Face>::iterator fit = faces.begin();
       fit != faces.end(); fit++)
     {
       b->add(fit->tca);
@@ -204,9 +204,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
 
   if(normals.size() > 0)
   {
-    std::sr1::shared_ptr<Buffer> b = context->createBuffer();
+    std::shared_ptr<Buffer> b = context->createBuffer();
 
-    for(std::sr1::vector<Face>::iterator fit = faces.begin();
+    for(std::vector<Face>::iterator fit = faces.begin();
       fit != faces.end(); fit++)
     {
       b->add(fit->na);
@@ -219,9 +219,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine)
 
   if(lmcs.size() > 0)
   {
-    std::sr1::shared_ptr<Buffer> b = context->createBuffer();
+    std::shared_ptr<Buffer> b = context->createBuffer();
 
-    for(std::sr1::vector<Face>::iterator fit = faces.begin();
+    for(std::vector<Face>::iterator fit = faces.begin();
       fit != faces.end(); fit++)
     {
       b->add(fit->lmca);

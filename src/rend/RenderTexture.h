@@ -3,10 +3,8 @@
 
 #include <GL/glew.h>
 
-#include <sr1/memory>
-#include <sr1/noncopyable>
-#include <sr1/zero_initialized>
-#include <sr1/vector>
+#include <memory>
+#include <vector>
 
 namespace rend
 {
@@ -14,8 +12,9 @@ namespace rend
 struct Context;
 struct Shader;
 
-struct RenderTexture : public TextureAdapter, public std::sr1::noncopyable
+struct RenderTexture : public TextureAdapter
 {
+  RenderTexture();
   ~RenderTexture();
 
   void setSize(unsigned int width, unsigned int height);
@@ -32,12 +31,15 @@ private:
   friend struct Context;
   friend struct Shader;
 
-  std::sr1::shared_ptr<Context> context;
-  std::sr1::zero_initialized<GLuint> fboId;
-  std::sr1::zero_initialized<GLuint> rboId;
-  std::sr1::zero_initialized<GLuint> id;
+  std::shared_ptr<Context> context;
+  GLuint fboId = 0;
+  GLuint rboId = 0;
+  GLuint id = 0;
   ivec2 size;
-  std::sr1::zero_initialized<bool> dirty;
+  bool dirty = false;
+
+  RenderTexture(const RenderTexture&);
+  RenderTexture& operator=(const RenderTexture&);
 
 };
 

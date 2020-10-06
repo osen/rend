@@ -5,6 +5,8 @@
 namespace rend
 {
 
+RenderTexture::RenderTexture() {}
+
 RenderTexture::~RenderTexture()
 {
   GLuint delId = id;

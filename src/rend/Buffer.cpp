@@ -5,6 +5,8 @@
 namespace rend
 {
 
+Buffer::Buffer() {}
+
 Buffer::~Buffer()
 {
   glBindBuffer(GL_ARRAY_BUFFER, 0);

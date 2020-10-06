@@ -3,7 +3,7 @@
 namespace rend
 {
 
-void Util::splitStringLineEnding(const std::string& input, std::sr1::vector<std::string>& output)
+void Util::splitStringLineEnding(const std::string& input, std::vector<std::string>& output)
 {
   std::string curr;
 
@@ -32,7 +32,7 @@ void Util::splitStringLineEnding(const std::string& input, std::sr1::vector<std:
   }
 }
 
-void Util::splitStringWhitespace(const std::string& input, std::sr1::vector<std::string>& output)
+void Util::splitStringWhitespace(const std::string& input, std::vector<std::string>& output)
 {
   std::string curr;
 
@@ -63,7 +63,7 @@ void Util::splitStringWhitespace(const std::string& input, std::sr1::vector<std:
   }
 }
 
-void Util::splitString(const std::string& input, char splitter, std::sr1::vector<std::string>& output)
+void Util::splitString(const std::string& input, char splitter, std::vector<std::string>& output)
 {
   std::string curr;
 

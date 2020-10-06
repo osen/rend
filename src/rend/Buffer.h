@@ -2,10 +2,8 @@
 
 #include <GL/glew.h>
 
-#include <sr1/vector>
-#include <sr1/memory>
-#include <sr1/zero_initialized>
-#include <sr1/noncopyable>
+#include <vector>
+#include <memory>
 
 namespace rend
 {
@@ -13,8 +11,9 @@ namespace rend
 struct Context;
 struct Shader;
 
-struct Buffer : public std::sr1::noncopyable
+struct Buffer
 {
+  Buffer();
   ~Buffer();
 
   void add(float value);
@@ -29,11 +28,14 @@ private:
   friend struct Context;
   friend struct Shader;
 
-  std::sr1::shared_ptr<Context> context;
-  std::sr1::vector<float> floatData;
-  std::sr1::zero_initialized<int> type;
-  std::sr1::zero_initialized<bool> dirty;
-  std::sr1::zero_initialized<GLuint> id;
+  std::shared_ptr<Context> context;
+  std::vector<float> floatData;
+  int type = 0;
+  bool dirty = false;
+  GLuint id = 0;
+
+  Buffer(const Buffer&);
+  Buffer& operator=(const Buffer&);
 
 };
 

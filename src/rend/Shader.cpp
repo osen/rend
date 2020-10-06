@@ -7,7 +7,7 @@
 #include "TextureAdapter.h"
 #include "Mesh.h"
 
-#include <sr1/vector>
+#include <vector>
 
 #include <array>
 
@@ -18,17 +18,17 @@ struct VariableInfo
 {
   std::string name;
   std::string typeName;
-  std::sr1::zero_initialized<GLint> loc;
-  std::sr1::zero_initialized<int> type;
-  std::sr1::zero_initialized<bool> attrib;
+  GLint loc = 0;
+  int type = 0;
+  bool attrib = false;
 
-  std::sr1::zero_initialized<float> floatVal;
+  float floatVal = 0;
   mat4 mat4Val;
   vec2 vec2Val;
   vec3 vec3Val;
   vec4 vec4Val;
-  std::sr1::shared_ptr<Buffer> bufferVal;
-  std::sr1::shared_ptr<TextureAdapter> textureVal;
+  std::shared_ptr<Buffer> bufferVal;
+  std::shared_ptr<TextureAdapter> textureVal;
 
   static std::string convertType(GLenum type);
 };
@@ -45,6 +45,8 @@ std::string VariableInfo::convertType(GLenum type)
   else throw Exception(std::string("Invalid type"));
 }
 
+Shader::Shader() {}
+
 Shader::~Shader()
 {
   glDeleteProgram(id);
@@ -56,7 +58,7 @@ GLuint Shader::getId()
   return id;
 }
 
-void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
+void Shader::render(const std::shared_ptr<RenderTexture>& target)
 {
   std::array<GLint, 4> viewport = {0};
   glGetIntegerv(GL_VIEWPORT, &viewport.at(0));
@@ -90,7 +92,7 @@ void Shader::render()
   int activeTexture = 0;
   int vertices = -1;
 
-  for(std::sr1::vector<std::sr1::shared_ptr<VariableInfo> >::iterator it = cache.begin();
+  for(std::vector<std::shared_ptr<VariableInfo> >::iterator it = cache.begin();
     it != cache.end(); it++)
   {
     if((*it)->attrib == false)
@@ -165,66 +167,66 @@ void Shader::render()
   glDisable(GL_DEPTH_TEST); pollForError();
 }
 
-void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
+void Shader::setSampler(const std::string& variable, const std::shared_ptr<TextureAdapter>& value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_SAMPLER_2D, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_SAMPLER_2D, false);
   vi->textureVal = value;
 }
 
 void Shader::setUniform(const std::string& variable, float value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT, false);
   vi->floatVal = value;
 }
 
 void Shader::setUniform(const std::string& variable, mat4 value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_MAT4, false);
   vi->mat4Val = value;
 }
 
 void Shader::setUniform(const std::string& variable, vec2 value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC2, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC2, false);
   vi->vec2Val = value;
 }
 
 void Shader::setUniform(const std::string& variable, vec3 value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC3, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC3, false);
   vi->vec3Val = value;
 }
 
 void Shader::setUniform(const std::string& variable, vec4 value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC4, false);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, GL_FLOAT_VEC4, false);
   vi->vec4Val = value;
 }
 
-void Shader::setAttribute(const std::string& variable, const std::sr1::shared_ptr<Buffer>& value)
+void Shader::setAttribute(const std::string& variable, const std::shared_ptr<Buffer>& value)
 {
-  std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, value->type, true);
+  std::shared_ptr<VariableInfo> vi = getVariableInfo(variable, value->type, true);
   vi->bufferVal = value;
 }
 
-void Shader::setMesh(const std::sr1::shared_ptr<Mesh>& value)
+void Shader::setMesh(const std::shared_ptr<Mesh>& value)
 {
-  for(std::sr1::vector<std::sr1::shared_ptr<BufferData> >::iterator it =
+  for(std::vector<std::shared_ptr<BufferData> >::iterator it =
     value->buffers.begin(); it != value->buffers.end(); it++)
   {
     setAttribute((*it)->name, (*it)->buffer);
   }
 
-  for(std::sr1::vector<std::sr1::shared_ptr<TextureData> >::iterator it =
+  for(std::vector<std::shared_ptr<TextureData> >::iterator it =
     value->textures.begin(); it != value->textures.end(); it++)
   {
     setSampler((*it)->name, (*it)->texture);
   }
 }
 
-std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)
+std::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)
 {
-  for(std::sr1::vector<std::sr1::shared_ptr<VariableInfo> >::iterator it = cache.begin();
+  for(std::vector<std::shared_ptr<VariableInfo> >::iterator it = cache.begin();
     it != cache.end(); it++)
   {
     if((*it)->name == name)
@@ -239,7 +241,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     }
   }
 
-  std::sr1::shared_ptr<VariableInfo> rtn = std::sr1::make_shared<VariableInfo>();
+  std::shared_ptr<VariableInfo> rtn = std::make_shared<VariableInfo>();
   rtn->name = name;
   rtn->attrib = attrib;
   rtn->type = type;
@@ -331,7 +333,7 @@ void Shader::parse(const std::string& source)
     glGetShaderiv(vertId, GL_INFO_LOG_LENGTH, &length);
     pollForError();
 
-    std::sr1::vector<char> infoLog(length);
+    std::vector<char> infoLog(length);
     glGetShaderInfoLog(vertId, length, NULL, &infoLog.at(0));
     pollForError();
 
@@ -366,7 +368,7 @@ void Shader::parse(const std::string& source)
     glGetShaderiv(fragId, GL_INFO_LOG_LENGTH, &length);
     pollForError();
 
-    std::sr1::vector<char> infoLog(length);
+    std::vector<char> infoLog(length);
     glGetShaderInfoLog(fragId, length, NULL, &infoLog.at(0));
     pollForError();
 
@@ -395,7 +397,7 @@ void Shader::parse(const std::string& source)
     glGetProgramiv(id, GL_INFO_LOG_LENGTH, &length);
     pollForError();
 
-    std::sr1::vector<char> infoLog(length);
+    std::vector<char> infoLog(length);
     glGetProgramInfoLog(id, length, NULL, &infoLog.at(0));
     pollForError();
 

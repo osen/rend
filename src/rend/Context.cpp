@@ -11,9 +11,9 @@
 namespace rend
 {
 
-std::sr1::shared_ptr<Context> Context::initialize()
+std::shared_ptr<Context> Context::initialize()
 {
-  std::sr1::shared_ptr<Context> rtn = std::sr1::make_shared<Context>();
+  std::shared_ptr<Context> rtn = std::make_shared<Context>();
 
   if(glewInit() != GLEW_OK)
   {
@@ -25,7 +25,7 @@ std::sr1::shared_ptr<Context> Context::initialize()
   return rtn;
 }
 
-std::sr1::shared_ptr<Shader> Context::createShader()
+std::shared_ptr<Shader> Context::createShader()
 {
   GLuint id = 0;
   id = glCreateProgram();
@@ -37,20 +37,20 @@ std::sr1::shared_ptr<Shader> Context::createShader()
 
   pollForError();
 
-  std::sr1::shared_ptr<Shader> rtn = std::sr1::make_shared<Shader>();
+  std::shared_ptr<Shader> rtn = std::make_shared<Shader>();
   rtn->context = self.lock();
   rtn->id = id;
 
   return rtn;
 }
 
-std::sr1::shared_ptr<Texture> Context::createTexture()
+std::shared_ptr<Texture> Context::createTexture()
 {
   GLuint id = 0;
   glGenTextures(1, &id);
   pollForError();
 
-  std::sr1::shared_ptr<Texture> rtn = std::sr1::make_shared<Texture>();
+  std::shared_ptr<Texture> rtn = std::make_shared<Texture>();
   rtn->context = self.lock();
   rtn->id = id;
 
@@ -59,7 +59,7 @@ std::sr1::shared_ptr<Texture> Context::createTexture()
   return rtn;
 }
 
-std::sr1::shared_ptr<RenderTexture> Context::createRenderTexture()
+std::shared_ptr<RenderTexture> Context::createRenderTexture()
 {
   GLuint id = 0;
   glGenTextures(1, &id);
@@ -73,7 +73,7 @@ std::sr1::shared_ptr<RenderTexture> Context::createRenderTexture()
   glGenRenderbuffers(1, &rboId);
   pollForError();
 
-  std::sr1::shared_ptr<RenderTexture> rtn = std::sr1::make_shared<RenderTexture>();
+  std::shared_ptr<RenderTexture> rtn = std::make_shared<RenderTexture>();
 
   rtn->context = self.lock();
   rtn->id = id;
@@ -85,22 +85,22 @@ std::sr1::shared_ptr<RenderTexture> Context::createRenderTexture()
   return rtn;
 }
 
-std::sr1::shared_ptr<Buffer> Context::createBuffer()
+std::shared_ptr<Buffer> Context::createBuffer()
 {
   GLuint id = 0;
   glGenBuffers(1, &id);
   pollForError();
 
-  std::sr1::shared_ptr<Buffer> rtn = std::sr1::make_shared<Buffer>();
+  std::shared_ptr<Buffer> rtn = std::make_shared<Buffer>();
   rtn->context = self.lock();
   rtn->id = id;
 
   return rtn;
 }
 
-std::sr1::shared_ptr<Mesh> Context::createMesh()
+std::shared_ptr<Mesh> Context::createMesh()
 {
-  std::sr1::shared_ptr<Mesh> rtn = std::sr1::make_shared<Mesh>();
+  std::shared_ptr<Mesh> rtn = std::make_shared<Mesh>();
   rtn->context = self.lock();
 
   return rtn;

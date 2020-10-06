@@ -1,5 +1,5 @@
-#include <sr1/vector>
-#include <sr1/memory>
+#include <vector>
+#include <memory>
 
 #include <string>
 
@@ -14,28 +14,28 @@ struct TextureAdapter;
 struct BufferData
 {
   std::string name;
-  std::sr1::shared_ptr<Buffer> buffer;
+  std::shared_ptr<Buffer> buffer;
 };
 
 struct TextureData
 {
   std::string name;
-  std::sr1::shared_ptr<TextureAdapter> texture;
+  std::shared_ptr<TextureAdapter> texture;
 };
 
 struct Mesh
 {
-  void setBuffer(const std::string& name, const std::sr1::shared_ptr<Buffer>& buffer);
-  void setTexture(const std::string& name, const std::sr1::shared_ptr<TextureAdapter>& texture);
+  void setBuffer(const std::string& name, const std::shared_ptr<Buffer>& buffer);
+  void setTexture(const std::string& name, const std::shared_ptr<TextureAdapter>& texture);
   void parse(const std::string& data);
 
 private:
   friend struct Context;
   friend struct Shader;
 
-  std::sr1::shared_ptr<Context> context;
-  std::sr1::vector<std::sr1::shared_ptr<BufferData> > buffers;
-  std::sr1::vector<std::sr1::shared_ptr<TextureData> > textures;
+  std::shared_ptr<Context> context;
+  std::vector<std::shared_ptr<BufferData> > buffers;
+  std::vector<std::shared_ptr<TextureData> > textures;
 
   void safeParse(const std::string& data, std::string& currentLine);
 

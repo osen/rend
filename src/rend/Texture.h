@@ -3,18 +3,17 @@
 
 #include <GL/glew.h>
 
-#include <sr1/memory>
-#include <sr1/noncopyable>
-#include <sr1/zero_initialized>
-#include <sr1/vector>
+#include <memory>
+#include <vector>
 
 namespace rend
 {
 
 struct Context;
 
-struct Texture : public TextureAdapter, public std::sr1::noncopyable
+struct Texture : public TextureAdapter
 {
+  Texture();
   ~Texture();
 
   void setSize(unsigned int width, unsigned int height);
@@ -32,14 +31,15 @@ struct Texture : public TextureAdapter, public std::sr1::noncopyable
 private:
   friend struct Context;
 
-  std::sr1::shared_ptr<Context> context;
-  std::sr1::zero_initialized<GLuint> id;
-  std::sr1::vector<vec4> data;
+  std::shared_ptr<Context> context;
+  GLuint id = 0;
+  std::vector<vec4> data;
   ivec2 size;
-  std::sr1::zero_initialized<bool> dirty;
-  std::sr1::zero_initialized<int> bpp;
+  bool dirty = false;
+  int bpp = 0;
 
-  //GLuint getId();
+  Texture(const Texture&);
+  Texture& operator=(const Texture&);
 
 };
 
