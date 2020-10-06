@@ -5,7 +5,6 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/src
 )
 
-add_definitions(-DSTD_SR1_DEBUG)
 add_definitions(-DSDL_MAIN_HANDLED)
 
 add_library(rend
